@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IT Support - Admin Page</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/assets/css/style.css" type="text/css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Electrolize&display=swap" rel="stylesheet">
+    <link rel="icon" href="/static/assets/img/favicon.ico">
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.2/axios.js"></script>
+    <script src="https://kit.fontawesome.com/148b4954bd.js" crossorigin="anonymous"></script>
+</head>
+
+<body>
+
+<div id="site">
+
+    <!- Main menu ->
+    <div v-if="display === 0">
+
+        <header class="main-header middle-margin">
+            <div class="main-header_left">
+                <a href="/">
+                    <img src="/static/assets/img/inno.png" height="45px" alt="logo">
+                </a>
+                <h1>IT Support</h1>
+            </div>
+            <a href="/" class="main-header_right">
+                <img src="/static/assets/img/user.png" height="45px" alt="profile">
+            </a>
+        </header>
+
+        <hr class="green-hr">
+
+        <main id="main" class="grid-menu big-margin">
+            <div v-for="widget in widgets" class="grid-element border">
+                <img v-bind:src="widget.icon" v-bind:alt="widget.id">
+                <div>
+                    <a v-on:click="setEdit(widget.id)">
+                        <h4 v-text='widget.id + ". " + widget.name'></h4>
+                    </a>
+                    <h6 v-text="widget.description" class="grid-description-text"></h6>
+                    <a v-on:click="setDisplay(widget.id)" class="grid-widget-link">Report Issue</a>
+                </div>
+            </div>
+            <div class="grid-element-new border">
+                <img src="/static/assets/img/plus.png" alt="plus" width="100">
+                <div>
+                    <a v-on:click="setDisplay(404)"><h4>Add new category</h4></a>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!- Request ->
+    <div v-for="widget in widgets">
+        <div v-if="display === widget.id && edit === false">
+
+            <header class="secondary-header middle-margin">
+                <a v-on:click="setDisplay(0)">
+                    <img src="/static/assets/img/arrow-left.png" alt="arrow" height="45">
+                </a>
+                <h1 v-text="widget.name"></h1>
+            </header>
+
+            <hr class="green-hr">
+
+            <main class="request-body big-margin">
+
+                <div v-if="!requestStatus">
+                    <h2 class="big-margin">Fill the form to report the issue</h2>
+                    <div class="fields" v-for="field in widget.fields">
+                        <h3 v-text="field.title"></h3>
+                        <input v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "input"' v-bind:placeholder="field.placeholder" class="input border small-margin">
+                        <textarea v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "textarea"' v-bind:placeholder="field.placeholder" class="textarea border small-margin"></textarea>
+                    </div>
+                    <button v-on:click="sendRequest()" class="button">Report</button>
+                </div>
+
+                <div v-if="requestStatus" class="successful">
+                    <img src="/static/assets/img/check-circle.png" alt="circle">
+                    <h3>Your issue has been successfully sent!</h3>
+                    <h5>We will fix it as soon as possible.</h5>
+                </div>
+
+            </main>
+        </div>
+    </div>
+
+    <!- Edit ->
+    <div v-for="widget in widgets">
+        <div v-if="display === widget.id && edit === true">
+
+            <header class="secondary-header middle-margin">
+                <a v-on:click="setDisplay(0)">
+                    <img src="/static/assets/img/arrow-left.png" alt="arrow" height="45">
+                </a>
+                <h1>Edit Category</h1>
+            </header>
+
+            <hr class="green-hr">
+
+            <main>
+                <div v-if="!requestStatus" class="edit-body">
+                    <h2 class="big-margin">Fill the form to edit the category</h2>
+                    <h3>Title</h3>
+                    <input v-bind:value="widget.name" placeholder="Enter the title" class="input border small-margin">
+                    <h3>Description</h3>
+                    <input v-bind:value="widget.description" placeholder="Characterise the category" class="input border small-margin">
+                    <hr class="middle-margin">
+                    <h3>Issue Fields</h3>
+                    <div class="fields" v-for="field in widget.fields">
+                        <input v-text="field.title" v-model.trim="field.title" placeholder="Field Title" class="input small-size border small-margin">
+                        <input v-text="field.placeholder" v-model.trim="field.placeholder" placeholder="Field Description" class="input middle-size border small-margin">
+                        <select v-model="field.type" class="select border small-margin">
+                            <option disabled value="" class="border">Type</option>
+                            <option v-for="(key, name) in fieldTypes" :value="name" v-text="key" class="border"></option>
+                        </select>
+                        <i class="fas fa-times" v-on:click="deleteField(widget.id, field)"></i>
+                    </div>
+                    <div class="add-field">
+                        <hr>
+                        <button v-on:click="addField(widget.id)" class="add-field__button">+ Add issue field</button>
+                        <hr>
+                    </div>
+                    <button v-on:click="updateJSON()" class="button">Edit</button>
+                </div>
+                <div v-if="requestStatus" class="successful">
+                    <img src="/static/assets/img/check-circle.png" alt="circle">
+                    <h3>Category has been successfully updated!</h3>
+                    <h5>Check out the issue page to see the update</h5>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!- New category ->
+    <div v-if="display === 404">
+
+        <header class="secondary-header middle-margin">
+            <a v-on:click="setDisplay(0)">
+                <img src="/static/assets/img/arrow-left.png" alt="arrow" height="45">
+            </a>
+            <h1>New Category</h1>
+        </header>
+
+        <hr class="green-hr">
+
+        <main>
+            <div v-if="!requestStatus">
+                <h2 class="big-margin">Fill the form to report the issue</h2>
+                <h3>Title</h3>
+                <input v-model.trim="newCategory.name" placeholder="Enter the title" class="input border small-margin">
+                <h3>Description</h3>
+                <input v-model.trim="newCategory.description" placeholder="Characterise the category" class="input border small-margin">
+                <hr class="middle-margin">
+                <h3>Issue Fields</h3>
+                <div class="fields" v-for="field in newCategory.fields">
+                    <input v-text="field.title" v-model.trim="field.title" placeholder="Field Title" class="input small-size border small-margin">
+                    <input v-text="field.placeholder" v-model.trim="field.placeholder" placeholder="Field Description" class="input middle-size border small-margin">
+                    <select v-model="field.type" class="select border small-margin">
+                        <option disabled value="" class="border">Type</option>
+                        <option v-for="(key, name) in fieldTypes" :value="name" v-text="key" class="border"></option>
+                    </select>
+                    <i class="fas fa-times" v-on:click="deleteNewField(field)"></i>
+                </div>
+                <div class="add-field">
+                    <hr>
+                    <button v-on:click="addNewField()" class="add-field__button">+ Add issue field</button>
+                    <hr>
+                </div>
+                <button v-on:click="insertCategory()" class="button">Create</button>
+            </div>
+            <div v-if="requestStatus" class="successful">
+                <img src="/static/assets/img/check-circle.png" alt="circle">
+                <h3>Your issue has been successfully sent!</h3>
+                <h5>We will fix it as soon as possible.</h5>
+            </div>
+        </main>
+    </div>
+</div>
+</body>
+
+<script src="/static/assets/js/admin-script.js"></script>
+</html>

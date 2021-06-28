@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>IT Support</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/assets/css/style.css" type="text/css">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Electrolize&display=swap" rel="stylesheet">
+    <link rel="icon" href="/static/assets/img/favicon.ico">
+    <script src="https://unpkg.com/vue"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.16.2/axios.js"></script>
+</head>
+
+<body>
+
+    <div id="site">
+
+        <!- Main menu ->
+        <div v-if="display === 0">
+
+            <header class="main-header middle-margin">
+                <div class="main-header_left">
+                    <a href="/">
+                        <img src="/static/assets/img/inno.png" height="45px" alt="logo">
+                    </a>
+                    <h1>IT Support</h1>
+                </div>
+                <a href="/" class="main-header_right">
+                    <img src="/static/assets/img/user.png" height="45px" alt="profile">
+                </a>
+            </header>
+
+            <hr class="green-hr">
+
+            <main id="main" class="grid-menu big-margin">
+                <div v-for="widget in widgets" class="grid-element border">
+                    <img v-bind:src="widget.icon" v-bind:alt="widget.id">
+                    <div>
+                        <h4 v-text='widget.id + ". " + widget.name'></h4>
+                        <h6 v-text="widget.description" class="grid-description-text"></h6>
+                        <a v-on:click="setDisplay(widget.id)" class="grid-widget-link">Report Issue</a>
+                    </div>
+                </div>
+            </main>
+        </div>
+
+        <!- Request ->
+        <div v-for="widget in widgets">
+            <div v-if="display === widget.id">
+
+                <header class="secondary-header middle-margin">
+                    <a v-on:click="setDisplay(0)">
+                        <img src="/static/assets/img/arrow-left.png" alt="arrow" height="45">
+                    </a>
+                    <h1 v-text="widget.name"></h1>
+                </header>
+
+                <hr class="green-hr">
+
+                <main class="request-body big-margin">
+
+                    <div v-if="!requestStatus" class="widget-body">
+
+                        <div>
+                            <h2 class="big-margin">FAQ</h2>
+                            <div v-for="i in widget.faq" class="small-margin">
+                                <h3 v-text="i.question"></h3>
+                                <a>
+                                    <img src="/static/assets/img/arrow-left.png" alt="arrow" width="15px">
+                                </a>
+                            </div>
+                        </div>
+
+                        <div>
+                            <h2 class="big-margin">Fill the form to report the issue</h2>
+                            <div class="request-field" v-for="field in widget.fields">
+                                <h3 v-text="field.title"></h3>
+                                <input v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "input"' v-bind:placeholder="field.placeholder" class="input border small-margin">
+                                <textarea v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "textarea"' v-bind:placeholder="field.placeholder" class="textarea border small-margin"></textarea>
+                            </div>
+                            <button v-on:click="setRequest()" class="button">Report</button>
+                        </div>
+
+                    </div>
+
+                    <div v-if="requestStatus" class="successful">
+                        <img src="/static/assets/img/check-circle.png" alt="circle">
+                        <h3>Your issue has been successfully sent!</h3>
+                        <h5>We will fix it as soon as possible.</h5>
+                    </div>
+
+                </main>
+            </div>
+        </div>
+
+    </div>
+</body>
+
+<script src="/static/assets/js/script.js"></script>
+</html>
