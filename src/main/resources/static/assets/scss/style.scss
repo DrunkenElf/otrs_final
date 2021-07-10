@@ -17,10 +17,12 @@ a, i, button {
 a:hover {
   color: cornflowerblue;
 }
-i {
+.fa-times {
   color: red;
 }
-
+.fa-check {
+  color: #80BC00;
+}
 .input {
   padding-left: 5px;
   width: 100%;
@@ -105,17 +107,15 @@ i {
 .grid-element {
   position: relative;
   padding: 1em;
-  display: flex;
   background-color: #fff;
   border-radius: 20px;
-  img {
-    margin-right: 1em;
-  }
 }
 
 .grid-element-new {
   display: grid;
   justify-content: center;
+  grid-template-columns: 1fr;
+  padding: 1em;
   background-color: #fff;
   border-radius: 20px;
   * {
@@ -134,7 +134,6 @@ i {
 
 @media only screen and (max-width: 965px) {
   .grid-menu {
-    display: grid;
     justify-content: center;
     grid-template-columns: repeat(2, 40%);
     grid-auto-rows: 150px;
@@ -145,7 +144,6 @@ i {
 
 @media only screen and (max-width: 760px) {
   .grid-menu {
-    display: grid;
     justify-content: center;
     grid-template-columns: repeat(1, 90%);
     grid-auto-rows: 150px;
@@ -154,15 +152,23 @@ i {
   }
 }
 
+.buttons {
+  display: flex;
+  justify-content: flex-end;
+}
+
 .button {
   height: 40px;
   font-size: 18px;
-  padding: 5px 30px 5px 30px;
+  padding: 5px 35px 5px 35px;
   background-color: #80BC00;
   color: #fff;
   border: none;
-  border-radius: 5px;
-  float: right;
+  border-radius: 15px;
+  margin: 8px;
+  &_red {
+    background-color: red;
+  }
 }
 
 .secondary-header {
@@ -176,8 +182,107 @@ i {
 }
 
 .widget-body {
-  display: flex;
+  display: grid;
   justify-content: space-between;
+  grid-template-columns: repeat(2, 48%);
+}
+
+
+.faq {
+  width: 100%;
+  &_title {
+    display: flex;
+    padding: 4px 0;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid #D1D1D1;
+    border-bottom: 1px solid #D1D1D1;
+    &_img {
+      cursor: pointer;
+    }
+  }
+  &_answer {
+    border-top: 1px solid #D1D1D1;
+    border-bottom: 1px solid #D1D1D1;
+    &_title {
+      display: flex;
+      align-items: center;
+    }
+  }
+  &_buttons {
+    display: flex;
+    justify-content: space-around;
+  }
+}
+
+.faq_edit{
+
+  &-title {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    justify-content: space-between;
+    i {
+      margin-left: 10px;
+    }
+  }
+  &-name {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    h3, img{
+      cursor: pointer;
+    }
+  }
+  &-answer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-left: 40px;
+    width: 96%;
+    h4 {
+      line-height: 2em;
+    }
+    &-name {
+      display: flex;
+      width: 100%;
+      align-items: center;
+      h4 {
+        cursor: pointer;
+      }
+    }
+    i {
+      margin-left: 10px;
+    }
+  }
+}
+
+.request-body {
+  width: 85%;
+  padding: 2em;
+  background-color: white;
+  border: 1px solid #80BC00;
+  border-radius: 25px;
+  overflow: hidden;
+}
+
+.image_input {
+  display: flex;
+}
+
+.input_button {
+  display: block;
+  height: 25px;
+  font-size: 15px;
+  padding: 5px 30px 5px 30px;
+  background-color: #80BC00;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  margin: 8px;
+  :focus {
+	outline: -webkit-focus-ring-color auto 5px;
+  }
 }
 
 .fields {
@@ -215,5 +320,9 @@ i {
     color: #80BC00;
     background-color: #F6F6F6;
     padding: 0 2px 0 2px;
+  }
+  &-faq {
+    padding-left: 40px;
+    width: 90%;
   }
 }

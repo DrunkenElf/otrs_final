@@ -11,6 +11,11 @@ body {
   background: #F6F6F6;
 }
 
+main {
+  padding-left: 1em;
+  padding-right: 1em;
+}
+
 a, i, button {
   cursor: pointer;
 }
@@ -19,8 +24,12 @@ a:hover {
   color: cornflowerblue;
 }
 
-i {
+.fa-times {
   color: red;
+}
+
+.fa-check {
+  color: #80BC00;
 }
 
 .input {
@@ -89,11 +98,11 @@ i {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   height: 45px;
   max-width: 100%;
 }
@@ -102,14 +111,59 @@ i {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
 }
 .main-header_left h1 {
   margin-left: 10px;
 }
 .main-header_right {
-  margin-top: 5px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+.main-header_right * {
+  margin-right: 5px;
+}
+.main-header_right img {
+  cursor: pointer;
+}
+.main-header_right span {
+  color: #80BC00;
+  font-size: 22px;
+}
+.main-header_links {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding-top: 10px;
+  padding-bottom: 10px;
+}
+.main-header_links a {
+  -webkit-box-flex: 1;
+  -ms-flex: 1;
+  flex: 1;
+  padding: 0.5em;
+  text-align: center;
+  border-right: 1px solid #80BC00;
+}
+.main-header_links a:hover {
+  color: #80BC00;
+}
+.main-header_links a:visited {
+  color: #80BC00;
+}
+.main-header_links .last-element {
+  border: none;
 }
 
 .green-hr {
@@ -123,8 +177,8 @@ i {
   display: -ms-grid;
   display: grid;
   -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   -ms-grid-columns: 30% 2em 30% 2em 30%;
   grid-template-columns: repeat(3, 30%);
   grid-auto-rows: 150px;
@@ -135,22 +189,28 @@ i {
 .grid-element {
   position: relative;
   padding: 1em;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
   background-color: #fff;
   border-radius: 20px;
 }
-.grid-element img {
-  margin-right: 1em;
+.grid-element * {
+  margin: 2px 0 2px 0;
+}
+.grid-element h5 {
+  position: absolute;
+  bottom: 1em;
+  right: 1em;
+  color: cornflowerblue;
 }
 
 .grid-element-new {
   display: -ms-grid;
   display: grid;
   -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -ms-grid-columns: 1fr;
+  grid-template-columns: 1fr;
+  padding: 1em;
   background-color: #fff;
   border-radius: 20px;
 }
@@ -167,43 +227,27 @@ i {
   bottom: 1em;
 }
 
-@media only screen and (max-width: 965px) {
-  .grid-menu {
-    display: -ms-grid;
-    display: grid;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
-    -ms-grid-columns: 40% 2em 40%;
-    grid-template-columns: repeat(2, 40%);
-    grid-auto-rows: 150px;
-    grid-column-gap: 2em;
-    grid-row-gap: 1em;
-  }
+.buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
 }
-@media only screen and (max-width: 760px) {
-  .grid-menu {
-    display: -ms-grid;
-    display: grid;
-    -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
-    -ms-grid-columns: 90%;
-    grid-template-columns: repeat(1, 90%);
-    grid-auto-rows: 150px;
-    grid-column-gap: 2em;
-    grid-row-gap: 1em;
-  }
-}
+
 .button {
   height: 40px;
   font-size: 18px;
-  padding: 5px 30px 5px 30px;
+  padding: 5px 35px 5px 35px;
   background-color: #80BC00;
   color: #fff;
   border: none;
-  border-radius: 5px;
-  float: right;
+  border-radius: 15px;
+  margin: 8px;
+}
+.button_red {
+  background-color: red;
 }
 
 .secondary-header {
@@ -211,8 +255,8 @@ i {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   height: 45px;
   max-width: 100%;
 }
@@ -225,8 +269,152 @@ i {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+
+.faq {
+  margin-bottom: 35px;
+  width: 100%;
+  margin-right: 25px;
+}
+.faq_title {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  padding: 4px 0;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  border-top: 1px solid #D1D1D1;
+  border-bottom: 1px solid #D1D1D1;
+}
+.faq_title_img {
+  cursor: pointer;
+}
+.faq_answer {
+  border-top: 1px solid #D1D1D1;
+  border-bottom: 1px solid #D1D1D1;
+}
+.faq_answer_title {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+.faq_buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-pack: distribute;
+  justify-content: space-around;
+}
+
+.faq_edit {
+  border-top: 1px solid #D1D1D1;
+  border-bottom: 1px solid #D1D1D1;
+  padding-top: 7px;
+  padding-bottom: 7px;
+}
+.faq_edit-title {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+}
+.faq_edit-title i {
+  margin-left: 10px;
+}
+.faq_edit-name {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+.faq_edit-name h3, .faq_edit-name img {
+  cursor: pointer;
+  line-height: 2em;
+}
+.faq_edit-name-ru h3, .faq_edit-name-ru input {
+  margin-left: 36px;
+}
+.faq_edit-answer {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+  -webkit-box-pack: justify;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
+  padding-left: 40px;
+  width: 96%;
+}
+.faq_edit-answer h4 {
+  line-height: 2em;
+}
+.faq_edit-answer-name {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  width: 100%;
+  -webkit-box-align: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+.faq_edit-answer-name h4 {
+  cursor: pointer;
+}
+.faq_edit-answer i {
+  margin-left: 10px;
+}
+
+.request-body {
+  width: 85%;
+  padding: 2em;
+  background-color: white;
+  border: 1px solid #80BC00;
+  border-radius: 25px;
+  overflow: hidden;
+}
+.request-body button {
+  float: right;
+}
+
+.image_input {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+}
+
+.input_button {
+  display: block;
+  height: 25px;
+  font-size: 15px;
+  padding: 5px 30px 5px 30px;
+  background-color: #80BC00;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  margin: 8px;
+}
+.input_button :focus {
+  outline: -webkit-focus-ring-color auto 5px;
 }
 
 .fields input, .fields select {
@@ -238,8 +426,8 @@ i {
   display: -ms-grid;
   display: grid;
   -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 }
 .successful * {
   margin: 5px auto 5px auto;
@@ -253,18 +441,18 @@ i {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   height: 10px;
   margin: 15px 0 15px 0;
 }
 .add-field hr {
   -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
+  -ms-flex: 1;
+  flex: 1;
   border: none;
   background-color: #80BC00;
   height: 1px;
@@ -274,4 +462,106 @@ i {
   color: #80BC00;
   background-color: #F6F6F6;
   padding: 0 2px 0 2px;
+}
+.add-field-faq {
+  padding-left: 40px;
+  width: 90%;
+}
+
+.ticket_number {
+  width: 100%;
+  line-height: 30px;
+  background: #B0B0B0;
+}
+.ticket_number span {
+  margin-left: 15px;
+  margin-right: 15px;
+}
+.ticket_number a {
+  margin-right: 10px;
+}
+
+.ticket_table {
+  overflow-x: scroll;
+  border: 1px solid #B0B0B0;
+}
+.ticket_table table {
+  border-collapse: collapse;
+  border-spacing: 0;
+  width: 0;
+}
+.ticket_table thead {
+  display: none;
+}
+.ticket_table tr {
+  display: table-row;
+}
+.ticket_table tbody {
+  display: table-row-group;
+}
+.ticket_table td {
+  white-space: nowrap;
+  text-align: left;
+  padding: 5px 10px 5px 10px;
+}
+.ticket_table_title {
+  padding-left: 15px;
+  padding-right: 8px;
+  font-weight: bold;
+}
+.ticket_table_body {
+  padding-left: 8px;
+  color: gray;
+}
+.ticket_table_buttons {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  margin-top: 10px;
+}
+.ticket_table_buttons button {
+  padding: 0.19em;
+  font-size: 16px;
+  margin-right: 8px;
+}
+.ticket_table_buttons span {
+  margin-right: 8px;
+  font-size: 16px;
+  padding: 0.19em;
+}
+
+.white_colored {
+  background: white;
+}
+
+@media only screen and (max-width: 965px) {
+  .grid-menu {
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-grid-columns: 40% 2em 40%;
+    grid-template-columns: repeat(2, 40%);
+    grid-auto-rows: 150px;
+    grid-column-gap: 2em;
+    grid-row-gap: 1em;
+  }
+}
+@media only screen and (max-width: 560px) {
+  .grid-menu {
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-grid-columns: 90%;
+    grid-template-columns: repeat(1, 90%);
+    grid-auto-rows: 150px;
+    grid-column-gap: 2em;
+    grid-row-gap: 1em;
+  }
+
+  .widget-body {
+    display: block;
+  }
 }

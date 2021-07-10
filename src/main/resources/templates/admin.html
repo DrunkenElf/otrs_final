@@ -20,37 +20,193 @@
     <!- Main menu ->
     <div v-if="display === 0">
 
-        <header class="main-header middle-margin">
-            <div class="main-header_left">
-                <a href="/">
-                    <img src="/static/assets/img/inno.png" height="45px" alt="logo">
-                </a>
-                <h1>IT Support</h1>
+        <header>
+            <div class="main-header middle-margin">
+                <div class="main-header_left">
+                    <a href="/">
+                        <img src="/static/assets/img/inno.png" height="45px" alt="logo">
+                    </a>
+                    <h1 v-if="language === 0">IT Support</h1>
+                    <h1 v-else>IT Поддержка</h1>
+                </div>
+                <div class="main-header_right">
+                    <span>en</span>
+                    <img @click="changeLanguage" :src="lng_image" id="language" alt="button" height="25">
+                    <span>ru</span>
+                    <a href="/">
+                        <img src="/static/assets/img/user.png" height="45px" alt="profile">
+                    </a>
+                </div>
             </div>
-            <a href="/" class="main-header_right">
-                <img src="/static/assets/img/user.png" height="45px" alt="profile">
-            </a>
+            <hr class="green-hr">
+            <div class="main-header_links">
+                <a v-if="language === 0" @click="setMainMenu(0)" id="link0">New Ticket</a>
+                <a v-else @click="setMainMenu(0)" id="link0">Новый тикет</a>
+                <a v-if="language === 0" @click="setMainMenu(1)" id="link1">Open Tickets</a>
+                <a v-else @click="setMainMenu(1)" id="link1">Открытые тикеты</a>
+                <a v-if="language === 0" @click="setMainMenu(2)" id="link2">Resolved Tickets</a>
+                <a v-else @click="setMainMenu(2)" id="link2">Решенные тикеты</a>
+                <a v-if="language === 0" @click="setMainMenu(3)" id="link3">All Tickets</a>
+                <a v-else @click="setMainMenu(3)" id="link3">Все тикеты</a>
+                <a v-if="language === 0" @click="setMainMenu(4)" id="link4" class="last-element">FAQ</a>
+                <a v-else @click="setMainMenu(4)" id="link4" class="last-element">FAQ</a>
+            </div>
+            <hr class="green-hr">
         </header>
 
-        <hr class="green-hr">
-
-        <main id="main" class="grid-menu big-margin">
+        <main v-if="main_menu === 0" id="main" class="grid-menu big-margin">
             <div v-for="widget in widgets" class="grid-element border">
-                <img v-bind:src="widget.icon" v-bind:alt="widget.id">
-                <div>
-                    <a v-on:click="setEdit(widget.id)">
-                        <h4 v-text='widget.id + ". " + widget.name'></h4>
-                    </a>
-                    <h6 v-text="widget.description" class="grid-description-text"></h6>
-                    <a v-on:click="setDisplay(widget.id)" class="grid-widget-link">Report Issue</a>
-                </div>
+                <a v-on:click="setEdit(widget.id)">
+                    <h4 v-text='widget.id + ". " + widget.name'></h4>
+                </a>
+                <h6 v-text="widget.description" class="grid-description-text"></h6>
+                <a v-if="language === 0" v-on:click="setDisplay(widget.id)" class="grid-widget-link">Report Issue</a>
+                <a v-else v-on:click="setDisplay(widget.id)" class="grid-widget-link">Сообщить о проблеме</a>
             </div>
             <div class="grid-element-new border">
                 <img src="/static/assets/img/plus.png" alt="plus" width="100">
                 <div>
-                    <a v-on:click="setDisplay(404)"><h4>Add new category</h4></a>
+                    <a v-if="language === 0" v-on:click="setDisplay(404)"><h4>Add new category</h4></a>
+                    <a v-else v-on:click="setDisplay(404)"><h4>Добавить новую категорию</h4></a>
                 </div>
             </div>
+        </main>
+
+        <main v-if="main_menu === 1" class="big-margin">
+
+            <div class="ticket_number">
+                <span v-if="language === 0">Number of tickets:</span>
+                <span v-else>Количетсво тикетов:</span>
+                <a @click="setTicketNumber(10)">10</a>
+                <a @click="setTicketNumber(20)">20</a>
+                <a @click="setTicketNumber(50)">50</a>
+            </div>
+            <div class="ticket_table">
+                <table>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="i in openTickets.length" v-if="((i - 1) >= ticketFirstId && (i - 1) < (ticketFirstId + ticket_number))" v-bind:class="{'white_colored' :isEven(i - 1)}">
+                        <td>
+                            <span v-text="getData(openTickets[i - 1].time)"></span>
+                        </td>
+                        <td>
+                            <span v-text="openTickets[i - 1].title + ' '" class="ticket_table_title"></span>
+                        </td>
+                        <td>
+                            <span>-</span>
+                            <span v-text="openTickets[i - 1].body" class="ticket_table_body"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="ticket_table_buttons">
+                <button @click="setPage(1)" v-if="pageID > 2">1</button>
+                <span v-if="pageID > 3">...</span>
+                <button @click="setPage(pageID - 1)" v-if="pageID > 1" v-text="pageID - 1"></button>
+                <button @click="setPage(pageID)" v-text="pageID"></button>
+                <button @click="setPage(pageID + 1)" v-if="pageID + 1 <= pageNumbers" v-text="pageID + 1"></button>
+                <span v-if="pageID + 2 < pageNumbers">...</span>
+                <button @click="setPage(pageNumbers)" v-if="pageID + 1 < pageNumbers" v-text="pageNumbers"></button>
+            </div>
+        </main>
+
+        <main v-if="main_menu === 2" class="big-margin">
+            <div class="ticket_number">
+                <span v-if="language === 0">Number of tickets:</span>
+                <span v-else>Количетсво тикетов:</span>
+                <a @click="setTicketNumber(10)">10</a>
+                <a @click="setTicketNumber(20)">20</a>
+                <a @click="setTicketNumber(50)">50</a>
+            </div>
+            <div class="ticket_table">
+                <table>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="i in closedTickets.length" v-if="((i - 1) >= ticketFirstId && (i - 1) < (ticketFirstId + ticket_number))" v-bind:class="{'white_colored' :isEven(i - 1)}">
+                        <td>
+                            <span v-text="getData(closedTickets[i - 1].time)"></span>
+                        </td>
+                        <td>
+                            <span v-text="closedTickets[i - 1].title + ' '" class="ticket_table_title"></span>
+                        </td>
+                        <td>
+                            <span>-</span>
+                            <span v-text="closedTickets[i - 1].body" class="ticket_table_body"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="ticket_table_buttons">
+                <button @click="setPage(1)" v-if="pageID > 2">1</button>
+                <span v-if="pageID > 3">...</span>
+                <button @click="setPage(pageID - 1)" v-if="pageID > 1" v-text="pageID - 1"></button>
+                <button @click="setPage(pageID)" v-text="pageID"></button>
+                <button @click="setPage(pageID + 1)" v-if="pageID + 1 <= pageNumbers" v-text="pageID + 1"></button>
+                <span v-if="pageID + 2 < pageNumbers">...</span>
+                <button @click="setPage(pageNumbers)" v-if="pageID + 1 < pageNumbers" v-text="pageNumbers"></button>
+            </div>
+        </main>
+
+        <main v-if="main_menu === 3" class="big-margin">
+            <div class="ticket_number">
+                <span v-if="language === 0">Number of tickets:</span>
+                <span v-else>Количетсво тикетов:</span>
+                <a @click="setTicketNumber(10)">10</a>
+                <a @click="setTicketNumber(20)">20</a>
+                <a @click="setTicketNumber(50)">50</a>
+            </div>
+            <div class="ticket_table">
+                <table>
+                    <thead>
+                    <tr>
+                        <th></th>
+                        <th></th>
+                        <th></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr v-for="i in tickets.length" v-if="((i - 1) >= ticketFirstId && (i - 1) < (ticketFirstId + ticket_number))" v-bind:class="{'white_colored' :isEven(i - 1)}">
+                        <td>
+                            <span v-text="getData(tickets[i - 1].time)"></span>
+                        </td>
+                        <td>
+                            <span v-text="tickets[i - 1].title + ' '" class="ticket_table_title"></span>
+                        </td>
+                        <td>
+                            <span>-</span>
+                            <span v-text="tickets[i - 1].body" class="ticket_table_body"></span>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="ticket_table_buttons">
+                <button @click="setPage(1)" v-if="pageID > 2">1</button>
+                <span v-if="pageID > 3">...</span>
+                <button @click="setPage(pageID - 1)" v-if="pageID > 1" v-text="pageID - 1"></button>
+                <button @click="setPage(pageID)" v-text="pageID"></button>
+                <button @click="setPage(pageID + 1)" v-if="pageID + 1 <= pageNumbers" v-text="pageID + 1"></button>
+                <span v-if="pageID + 2 < pageNumbers">...</span>
+                <button @click="setPage(pageNumbers)" v-if="pageID + 1 < pageNumbers" v-text="pageNumbers"></button>
+            </div>
+        </main>
+
+        <main v-if="main_menu === 4">
+
         </main>
     </div>
 
@@ -58,34 +214,75 @@
     <div v-for="widget in widgets">
         <div v-if="display === widget.id && edit === false">
 
-            <header class="secondary-header middle-margin">
-                <a v-on:click="setDisplay(0)">
-                    <img src="/static/assets/img/arrow-left.png" alt="arrow" height="45">
-                </a>
-                <h1 v-text="widget.name"></h1>
+            <header class="main-header middle-margin">
+                <div class="main-header_left">
+                    <a v-on:click="setDisplay(0)">
+                        <img src="/static/assets/img/arrow-left.png" alt="arrow" height="45">
+                    </a>
+                    <h1 v-text="widget.name"></h1>
+                </div>
+                <div class="main-header_right">
+                    <span>en</span>
+                    <img @click="changeLanguage" :src="lng_image" id="language" alt="button" height="30">
+                    <span>ru</span>
+                </div>
             </header>
 
             <hr class="green-hr">
 
-            <main class="request-body big-margin">
-
-                <div v-if="!requestStatus">
-                    <h2 class="big-margin">Fill the form to report the issue</h2>
-                    <div class="fields" v-for="field in widget.fields">
-                        <h3 v-text="field.title"></h3>
-                        <input v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "input"' v-bind:placeholder="field.placeholder" class="input border small-margin">
-                        <textarea v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "textarea"' v-bind:placeholder="field.placeholder" class="textarea border small-margin"></textarea>
+            <main class="big-margin">
+                <div v-if="!requestStatus" class="widget-body">
+                    <div class="faq">
+                        <h2 class="big-margin">FAQ</h2>
+                        <div v-if="faq_list">
+                            <div v-for="i in widget.faq">
+                                <div class="faq_title">
+                                    <h3 v-text="i.question"></h3>
+                                    <a @click="setQuestion(i.id)">
+                                        <img src="/static/assets/img/chevron-down.png" alt="chevron">
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                        <div v-else>
+                            <div class="faq_answer">
+                                <h4 v-text="widget.faq[question_id].question" class="small-margin"></h4>
+                                <div class="faq_answer_title middle-margin">
+                                    <a @click="setFAQlist">
+                                        <img src="/static/assets/img/arrow-left.png" alt="arrow" height="35">
+                                    </a>
+                                    <h3 v-text="widget.faq[question_id].answers[answer_id]"></h3>
+                                </div>
+                                <div class="faq_buttons middle-margin">
+                                    <button v-if="language === 0" @click="setNextAnswer" class="button">No</button>
+                                    <button v-else @click="setNextAnswer" class="button">Нет</button>
+                                    <button v-if="language === 0" @click="setFAQlist" class="button">Yes</button>
+                                    <button v-else @click="setFAQlist" class="button">Да</button>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <button v-on:click="sendRequest()" class="button">Report</button>
+                    <div class="request-body">
+                        <h2 v-if="language === 0" class="middle-margin">Fill the form to report the issue</h2>
+                        <h2 v-else class="middle-margin">Заполните форму</h2>
+                        <div class="request-field" v-for="field in widget.fields">
+                            <h3 v-text="field.title"></h3>
+                            <input v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "input"' v-bind:placeholder="field.placeholder" class="input border small-margin">
+                            <textarea v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "textarea"' v-bind:placeholder="field.placeholder" class="textarea border small-margin"></textarea>
+                        </div>
+                        <button v-if="language === 0" v-on:click="sendRequest()" class="button">Report</button>
+                        <button v-else v-on:click="setRequest()" class="button">Сообщить</button>
+                    </div>
                 </div>
-
                 <div v-if="requestStatus" class="successful">
                     <img src="/static/assets/img/check-circle.png" alt="circle">
-                    <h3>Your issue has been successfully sent!</h3>
-                    <h5>We will fix it as soon as possible.</h5>
+                    <h3 v-if="language === 0">Your issue has been successfully sent!</h3>
+                    <h3 v-else>Ваш запрос отправлен!</h3>
+                    <h5 v-if="language === 0">We will fix it as soon as possible.</h5>
+                    <h5 v-else>Решим проблему как можно скорее.</h5>
                 </div>
-
             </main>
+
         </div>
     </div>
 
@@ -93,44 +290,151 @@
     <div v-for="widget in widgets">
         <div v-if="display === widget.id && edit === true">
 
-            <header class="secondary-header middle-margin">
-                <a v-on:click="setDisplay(0)">
-                    <img src="/static/assets/img/arrow-left.png" alt="arrow" height="45">
-                </a>
-                <h1>Edit Category</h1>
+            <header class="main-header middle-margin">
+                <div class="main-header_left">
+                    <a v-on:click="setDisplay(0)">
+                        <img src="/static/assets/img/arrow-left.png" alt="arrow" height="45">
+                    </a>
+                    <h1 v-if="language === 0">Edit Category</h1>
+                    <h1 v-else>Редактирование Категории</h1>
+                </div>
+                <div class="main-header_right">
+                    <span>en</span>
+                    <img @click="changeLanguage" :src="lng_image" id="language" alt="button" height="30">
+                    <span>ru</span>
+                </div>
             </header>
 
             <hr class="green-hr">
 
             <main>
                 <div v-if="!requestStatus" class="edit-body">
-                    <h2 class="big-margin">Fill the form to edit the category</h2>
-                    <h3>Title</h3>
-                    <input v-bind:value="widget.name" placeholder="Enter the title" class="input border small-margin">
-                    <h3>Description</h3>
-                    <input v-bind:value="widget.description" placeholder="Characterise the category" class="input border small-margin">
+
+                    <h2 v-if="language === 0" class="big-margin">Fill the form to edit the category</h2>
+                    <h2 v-else class="big-margin">Заполните форму для редактирования</h2>
+
+                    <h3 v-if="language === 0">Title [en]</h3>
+                    <h3 v-else>Заголовок [en]</h3>
+                    <input v-model.trim="editData.name" placeholder="Enter the title" class="input border small-margin">
+                    <h3 v-if="language === 0">Title [ru]</h3>
+                    <h3 v-else>Заголовок [ru]</h3>
+                    <input v-model.trim="editDataRU.name" placeholder="Введите заголовок" class="input border small-margin">
+
+                    <h3 v-if="language === 0">Description [en]</h3>
+                    <h3 v-else>Описание [en]</h3>
+                    <input v-model.trim="editData.description" placeholder="Characterise the category" class="input border small-margin">
+                    <h3 v-if="language === 0">Description [ru]</h3>
+                    <h3 v-else>Описание [ru]</h3>
+                    <input v-model.trim="editDataRU.description" placeholder="Охарактеризируйте категорию" class="input border small-margin">
+
                     <hr class="middle-margin">
-                    <h3>Issue Fields</h3>
-                    <div class="fields" v-for="field in widget.fields">
-                        <input v-text="field.title" v-model.trim="field.title" placeholder="Field Title" class="input small-size border small-margin">
-                        <input v-text="field.placeholder" v-model.trim="field.placeholder" placeholder="Field Description" class="input middle-size border small-margin">
-                        <select v-model="field.type" class="select border small-margin">
-                            <option disabled value="" class="border">Type</option>
+
+                    <h3 v-if="language === 0">Issue Fields</h3>
+                    <h3 v-else>Поля Категории</h3>
+
+                    <div class="fields" v-for="i in editData.fields.length">
+
+                        <input v-model.trim="editData.fields[i - 1].title" placeholder="Field Title" class="input small-size border small-margin">
+                        <input v-model.trim="editData.fields[i - 1].placeholder" placeholder="Field Description" class="input middle-size border small-margin">
+                        <select v-model="editData.fields[i - 1].type" class="select border small-margin">
+                            <option v-if="language === 0" disabled value="" class="border">Type</option>
+                            <option v-else disabled value="" class="border">Тип</option>
                             <option v-for="(key, name) in fieldTypes" :value="name" v-text="key" class="border"></option>
                         </select>
-                        <i class="fas fa-times" v-on:click="deleteField(widget.id, field)"></i>
+                        <i class="fas fa-times" v-on:click="deleteField(i - 1)"></i>
+
+                        <input v-model.trim="editDataRU.fields[i - 1].title" placeholder="Заголовок Поля" class="input small-size border small-margin">
+                        <input v-model.trim="editDataRU.fields[i - 1].placeholder" placeholder="Описание Поля" class="input middle-size border small-margin">
                     </div>
                     <div class="add-field">
                         <hr>
-                        <button v-on:click="addField(widget.id)" class="add-field__button">+ Add issue field</button>
+                        <button v-if="language === 0" v-on:click="addField" class="add-field__button">+ Add issue field</button>
+                        <button v-else v-on:click="addField" class="add-field__button">+ Добавить новое поле</button>
                         <hr>
                     </div>
-                    <button v-on:click="updateJSON()" class="button">Edit</button>
+
+                    <hr class="middle-margin">
+
+                    <div>
+
+                        <h2 class="middle-margin">FAQ</h2>
+
+                        <div v-for="i in editData.faq.length" class="faq_edit">
+
+                            <div class="faq_edit-title">
+                                <div class="faq_edit-name">
+                                    <img @click="changeImage('image' + widget.id + editData.faq[i - 1].id); showAnswers('answer' + widget.id + editData.faq[i - 1].id)" src="/static/assets/img/chevron-down.png" alt="arrow" :id="'image' + widget.id + editData.faq[i - 1].id">
+                                    <h3 @click="changeType(widget.id.toString() + editData.faq[i - 1].id.toString())" v-show="true" v-text="editData.faq[i - 1].question" :id="'h3' + widget.id + editData.faq[i - 1].id"></h3>
+                                    <input v-show="false" v-model.trim="editData.faq[i - 1].question"  class="input border" :id="'input' + widget.id + editData.faq[i - 1].id">
+                                </div>
+
+                                <i @click="deleteFAQ(i - 1)" class="fas fa-times" :id="'cross' + widget.id + editData.faq[i - 1].id"></i>
+                                <i @click="changeType(widget.id.toString() + editData.faq[i - 1].id.toString())" v-show="false" class="fas fa-check" :id="'check' + widget.id + editData.faq[i - 1].id"></i>
+                            </div>
+
+                            <div class="faq_edit-title">
+                                <div class="faq_edit-name faq_edit-name-ru">
+                                    <h3 @click="changeTypeRU('ru' + widget.id.toString() + editDataRU.faq[i - 1].id.toString())" v-show="true" v-text="editDataRU.faq[i - 1].question" :id="'h3ru' + widget.id + editDataRU.faq[i - 1].id"></h3>
+                                    <input v-show="false" v-model.trim="editDataRU.faq[i - 1].question"  class="input border" :id="'inputru' + widget.id + editDataRU.faq[i - 1].id">
+                                </div>
+
+                                <i @click="changeTypeRU('ru' + widget.id.toString() + editDataRU.faq[i - 1].id.toString())" v-show="false" class="fas fa-check" :id="'checkru' + widget.id + editDataRU.faq[i - 1].id"></i>
+                            </div>
+
+
+                            <div v-show="false" :id="'answer' + widget.id + editData.faq[i - 1].id">
+                                <div v-for="answer in editData.faq[i - 1].answers.length" class="middle-margin">
+                                    <div class="faq_edit-answer">
+                                        <div class="faq_edit-answer-name">
+                                            <h4 @click="changeAnswer(widget.id.toString() + editData.faq[i - 1].id.toString() + answer.toString())" v-text="editData.faq[i - 1].answers[answer - 1]" :id="'h4' + widget.id + editData.faq[i - 1].id + answer"></h4>
+                                            <input v-show="false" v-model.trim="editData.faq[i - 1].answers[answer - 1]" class="input border" :id="'input' + widget.id + editData.faq[i - 1].id + answer">
+                                        </div>
+                                        <i @click="deleteAnswer(editData.faq[i - 1].id, answer - 1)" class="fas fa-times" :id="'cross' + widget.id + editData.faq[i - 1].id + answer"></i>
+                                        <i @click="changeAnswer(widget.id.toString() + editData.faq[i - 1].id.toString() + answer.toString())" v-show="false" class="fas fa-check" :id="'check' + widget.id + editData.faq[i - 1].id + answer"></i>
+                                    </div>
+
+                                    <div class="faq_edit-answer">
+                                        <div class="faq_edit-answer-name">
+                                            <h4 @click="changeAnswerRU('ru' + widget.id.toString() + editDataRU.faq[i - 1].id.toString() + answer.toString())" v-text="editDataRU.faq[i - 1].answers[answer - 1]" :id="'h4ru' + widget.id + editData.faq[i - 1].id + answer"></h4>
+                                            <input v-show="false" v-model.trim="editDataRU.faq[i - 1].answers[answer - 1]" class="input border" :id="'inputru' + widget.id + editDataRU.faq[i - 1].id + answer">
+                                        </div>
+                                        <i @click="changeAnswerRU('ru' + widget.id.toString() + editDataRU.faq[i - 1].id.toString() + answer.toString())" v-show="false" class="fas fa-check" :id="'checkru' + widget.id + editDataRU.faq[i - 1].id + answer"></i>
+                                    </div>
+                                </div>
+
+                                <div class="add-field add-field-faq">
+                                    <hr>
+                                    <button v-if="language === 0" v-on:click="addNewAnswer(editData.faq[i - 1].id)" class="add-field__button">+ Add new FAQ</button>
+                                    <button v-else v-on:click="addNewAnswer(editData.faq[i - 1].id)" class="add-field__button">+ Добавить новый FAQ</button>
+                                    <hr>
+                                </div>
+
+                            </div>
+                        </div>
+
+                        <div class="add-field">
+                            <hr>
+                            <button v-if="language === 0" v-on:click="addNewFAQ" class="add-field__button">+ Add new FAQ</button>
+                            <button v-else v-on:click="addNewFAQ" class="add-field__button">+ Добвить новый FAQ</button>
+                            <hr>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="buttons">
+                            <button v-if="language === 0" v-on:click="deleteCategory(widget.id)" class="button button_red">Delete</button>
+                            <button v-else v-on:click="deleteCategory(widget.id)" class="button button_red">Удалить</button>
+                            <button v-if="language === 0" v-on:click="updateCategory" class="button">Edit</button>
+                            <button v-else v-on:click="updateCategory" class="button">Изменить</button>
+                        </div>
+                    </div>
                 </div>
+
                 <div v-if="requestStatus" class="successful">
                     <img src="/static/assets/img/check-circle.png" alt="circle">
-                    <h3>Category has been successfully updated!</h3>
-                    <h5>Check out the issue page to see the update</h5>
+                    <h3 v-if="language === 0">Category has been successfully updated!</h3>
+                    <h3 v-else>Категория успешно изменена!</h3>
+                    <h5 v-if="language === 0">Check out the issue page to see the update</h5>
+                    <h5 v-else>Загляните в страницу проблемы, чтобы увидеть изменения</h5>
                 </div>
             </main>
         </div>
@@ -139,44 +443,149 @@
     <!- New category ->
     <div v-if="display === 404">
 
-        <header class="secondary-header middle-margin">
-            <a v-on:click="setDisplay(0)">
-                <img src="/static/assets/img/arrow-left.png" alt="arrow" height="45">
-            </a>
-            <h1>New Category</h1>
+        <header class="main-header middle-margin">
+            <div class="main-header_left">
+                <a v-on:click="setDisplay(0)">
+                    <img src="/static/assets/img/arrow-left.png" alt="arrow" height="45">
+                </a>
+                <h1 v-if="language === 0">New Category</h1>
+                <h1 v-else>Новая Категория</h1>
+            </div>
+            <div class="main-header_right">
+                <span>en</span>
+                <img @click="changeLanguage" :src="lng_image" id="language" alt="button" height="30">
+                <span>ru</span>
+            </div>
         </header>
 
         <hr class="green-hr">
 
         <main>
             <div v-if="!requestStatus">
-                <h2 class="big-margin">Fill the form to report the issue</h2>
-                <h3>Title</h3>
+
+                <h2 v-if="language === 0" class="big-margin">Fill the form to add new category</h2>
+                <h2 v-else class="big-margin">Заполните форму для создания новой категории</h2>
+
+                <h3 v-if="language === 0">Title [en]</h3>
+                <h3 v-else>Заголовок [en]</h3>
                 <input v-model.trim="newCategory.name" placeholder="Enter the title" class="input border small-margin">
-                <h3>Description</h3>
+
+                <h3 v-if="language === 0">Title [ru]</h3>
+                <h3 v-else>Заголовок [ru]</h3>
+                <input v-model.trim="newCategoryRU.name" placeholder="Введите заголовок" class="input border small-margin">
+
+                <h3 v-if="language === 0">Description [en]</h3>
+                <h3 v-else>Описание [en]</h3>
                 <input v-model.trim="newCategory.description" placeholder="Characterise the category" class="input border small-margin">
+
+                <h3 v-if="language === 0">Description [ru]</h3>
+                <h3 v-else>Описание [ru]</h3>
+                <input v-model.trim="newCategoryRU.description" placeholder="Охарактеризируйте категорию" class="input border small-margin">
+
                 <hr class="middle-margin">
-                <h3>Issue Fields</h3>
-                <div class="fields" v-for="field in newCategory.fields">
-                    <input v-text="field.title" v-model.trim="field.title" placeholder="Field Title" class="input small-size border small-margin">
-                    <input v-text="field.placeholder" v-model.trim="field.placeholder" placeholder="Field Description" class="input middle-size border small-margin">
-                    <select v-model="field.type" class="select border small-margin">
-                        <option disabled value="" class="border">Type</option>
+
+                <h3 v-if="language === 0">Issue Fields</h3>
+                <h3 v-else>Поля Категории</h3>
+
+                <div class="fields" v-for="i in newCategory.fields.length">
+
+                    <input v-model.trim="newCategory.fields[i - 1].title" placeholder="Field Title" class="input small-size border small-margin">
+                    <input v-model.trim="newCategory.fields[i - 1].placeholder" placeholder="Field Description" class="input middle-size border small-margin">
+                    <select v-model="newCategory.fields[i - 1].type" class="select border small-margin">
+                        <option v-if="language === 0" disabled value="" class="border">Type</option>
+                        <option v-else disabled value="" class="border">Тип</option>
                         <option v-for="(key, name) in fieldTypes" :value="name" v-text="key" class="border"></option>
                     </select>
-                    <i class="fas fa-times" v-on:click="deleteNewField(field)"></i>
+                    <i class="fas fa-times" v-on:click="deleteNewField(i - 1)"></i>
+
+                    <input v-model.trim="newCategoryRU.fields[i - 1].title" placeholder="Заголовок Поля" class="input small-size border small-margin">
+                    <input v-model.trim="newCategoryRU.fields[i - 1].placeholder" placeholder="Описание Поля" class="input middle-size border small-margin">
                 </div>
                 <div class="add-field">
                     <hr>
-                    <button v-on:click="addNewField()" class="add-field__button">+ Add issue field</button>
+                    <button v-if="language === 0" v-on:click="addNewField()" class="add-field__button">+ Add issue field</button>
+                    <button v-else v-on:click="addNewField()" class="add-field__button">+ Добавить новое поле</button>
                     <hr>
                 </div>
-                <button v-on:click="insertCategory()" class="button">Create</button>
+
+
+                <div>
+
+                    <h2 class="middle-margin">FAQ</h2>
+                    <hr class="middle-margin">
+
+                    <div v-for="i in newCategory.faq.length" class="faq_edit">
+
+                        <div class="faq_edit-title">
+                            <div class="faq_edit-name">
+                                <img @click="changeImage('image' + '404' + newCategory.faq[i - 1].id); showAnswers('answer' + '404' + newCategory.faq[i - 1].id)" src="/static/assets/img/chevron-down.png" alt="arrow" :id="'image' + '404' + newCategory.faq[i - 1].id">
+                                <h3 @click="changeType('404' + newCategory.faq[i - 1].id.toString())" v-show="true" v-text="newCategory.faq[i - 1].question" :id="'h3' + '404' + newCategory.faq[i - 1].id"></h3>
+                                <input v-show="false" v-model.trim="newCategory.faq[i - 1].question"  class="input border" :id="'input' + '404' + newCategory.faq[i - 1].id">
+                            </div>
+                            <i @click="deleteNewFAQ(newCategory.faq[i - 1].id)" class="fas fa-times" :id="'cross' + '404' + newCategory.faq[i - 1].id"></i>
+                            <i @click="changeType('404' + newCategory.faq[i - 1].id.toString())" v-show="false" class="fas fa-check" :id="'check' + '404' + newCategory.faq[i - 1].id"></i>
+                        </div>
+
+                        <div class="faq_edit-title">
+                            <div class="faq_edit-name faq_edit-name-ru">
+                                <h3 @click="changeTypeRU('ru' + '404' + newCategoryRU.faq[i - 1].id.toString())" v-show="true" v-text="newCategoryRU.faq[i - 1].question" :id="'h3ru' + '404' + newCategoryRU.faq[i - 1].id"></h3>
+                                <input v-show="false" v-model.trim="newCategoryRU.faq[i - 1].question"  class="input border" :id="'inputru' + '404' + newCategoryRU.faq[i - 1].id">
+                            </div>
+
+                            <i @click="changeTypeRU('ru' + '404' + newCategoryRU.faq[i - 1].id.toString())" v-show="false" class="fas fa-check" :id="'checkru' + '404' + newCategoryRU.faq[i - 1].id"></i>
+                        </div>
+
+                        <div v-show="false" :id="'answer' + '404' + newCategory.faq[i - 1].id">
+                            <div v-for="answer in newCategory.faq[i - 1].answers.length" class="middle-margin">
+                                <div class="faq_edit-answer">
+                                    <div class="faq_edit-answer-name">
+                                        <h4 @click="changeAnswer('404' + newCategory.faq[i - 1].id.toString() + answer.toString())" v-text="newCategory.faq[i - 1].answers[answer - 1]" :id="'h4' + '404' + newCategory.faq[i - 1].id + answer"></h4>
+                                        <input v-show="false" v-model.trim="newCategory.faq[i - 1].answers[answer - 1]" class="input border" :id="'input' + '404' + newCategory.faq[i - 1].id + answer">
+                                    </div>
+                                    <i @click="deleteNewAnswer(newCategory.faq[i - 1].id, answer - 1)" class="fas fa-times" :id="'cross' + '404' + newCategory.faq[i - 1].id + answer"></i>
+                                    <i @click="changeAnswer('404' + newCategory.faq[i - 1].id.toString() + answer.toString())" v-show="false" class="fas fa-check" :id="'check' + '404' + newCategory.faq[i - 1].id + answer"></i>
+                                </div>
+
+                                <div class="faq_edit-answer">
+                                    <div class="faq_edit-answer-name">
+                                        <h4 @click="changeAnswerRU('ru' + '404' + newCategoryRU.faq[i - 1].id.toString() + answer.toString())" v-text="newCategoryRU.faq[i - 1].answers[answer - 1]" :id="'h4ru' + '404' + newCategoryRU.faq[i - 1].id + answer"></h4>
+                                        <input v-show="false" v-model.trim="newCategoryRU.faq[i - 1].answers[answer - 1]" class="input border" :id="'inputru' + '404' + newCategoryRU.faq[i - 1].id + answer">
+                                    </div>
+                                    <i @click="changeAnswerRU('ru' + '404' + newCategoryRU.faq[i - 1].id.toString() + answer.toString())" v-show="false" class="fas fa-check" :id="'checkru' + '404' + newCategoryRU.faq[i - 1].id + answer"></i>
+                                </div>
+                            </div>
+
+                            <div class="add-field add-field-faq">
+                                <hr>
+                                <button v-if="language === 0" v-on:click="addNewAnswerForNew(newCategory.faq[i - 1].id)" class="add-field__button">+ Add new FAQ</button>
+                                <button v-else v-on:click="addNewAnswerForNew(newCategory.faq[i - 1].id)" class="add-field__button">+ Добавить новый FAQ</button>
+                                <hr>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="add-field">
+                        <hr>
+                        <button v-if="language === 0" v-on:click="addNewFAQforNew" class="add-field__button">+ Add new FAQ</button>
+                        <button v-else v-on:click="addNewFAQforNew" class="add-field__button">+ Добавить новый FAQ</button>
+                        <hr>
+                    </div>
+                </div>
+                <div>
+                    <hr class="middle-margin">
+                    <div class="buttons">
+                        <button v-if="language === 0" v-on:click="insertCategory" class="button">Create</button>
+                        <button v-else v-on:click="insertCategory" class="button">Создать</button>
+                    </div>
+                </div>
             </div>
             <div v-if="requestStatus" class="successful">
                 <img src="/static/assets/img/check-circle.png" alt="circle">
-                <h3>Your issue has been successfully sent!</h3>
-                <h5>We will fix it as soon as possible.</h5>
+                <h3 v-if="language === 0">New category has been successfully created!</h3>
+                <h3 v-else>Новая категория была успешно создана!</h3>
+                <h5 v-if="language === 0">Check out the main page to see update.</h5>
+                <h5 v-else>Проверьте главную страницу чтобы увдиеть изменения.</h5>
             </div>
         </main>
     </div>

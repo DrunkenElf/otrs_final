@@ -11,12 +11,7 @@ fun Application.configureSerialization() {
     install(ContentNegotiation) {
         gson {
             setPrettyPrinting()
-        }
-    }
-
-    routing {
-        get("/json/gson") {
-            call.respond(mapOf("hello" to "world"))
+            disableHtmlEscaping()
         }
     }
 }

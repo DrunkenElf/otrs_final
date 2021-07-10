@@ -15,15 +15,18 @@ import java.io.File
     }.start(wait = true)
 }*/
 
-val jsonsRoot = File("/resources/jsons")
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
-@Suppress("unused") // Referenced in application.conf
+@Suppress("unused")// Referenced in application.conf
+@kotlin.jvm.JvmOverloads
 fun Application.module() {
     configureRouting()
     configureMonitoring()
+    configureSession()
     configureSerialization()
     configCORS()
 
 }
+
+
