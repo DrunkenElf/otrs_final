@@ -1,4 +1,4 @@
-axios.defaults.baseURL = '/api/'
+//axios.defaults.baseURL = '/api/'
 
 let widgets = new Vue({
     el: '#login',
@@ -19,17 +19,20 @@ let widgets = new Vue({
             }
             let data = JSON.stringify(user1);
             console.log(data);
-            axios.post("/createSession", data, {
+            axios.post("/api/adminlogin", data, {
                 headers: {
                     'Content-Type': 'application/json;charset=UTF-8'
                 }
             }).then((response) => {
                 console.log(response);
+                //this.isOk = isOk
                 this.isOk = response.data.isOk;
-                if (this.isOk){
-                    window.location.href = "/";
+                if (!this.isOk){
+                    alert("Login Failed if");
                 } else {
-                    alert("Login Failed");
+                    console.log("success");
+                    window.location.href = '/admin'
+                    //this.redir()
                 }
                 this.requestResp = response;
 
@@ -37,10 +40,13 @@ let widgets = new Vue({
                 console.log(error.response);
                 alert("Login Failed");
             })
+        },
+        redir(){
+            axios.get('/redir')
         }
     },
     created: function () {
-        axios.get('/json').then((response) =>{
+        axios.get('/api/json').then((response) =>{
             this.widgets = response.data.widgets;
         })
     }
