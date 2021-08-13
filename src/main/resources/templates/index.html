@@ -28,11 +28,24 @@
                         <h1 v-if="language === 0">IT Support</h1>
                         <h1 v-else>IT Поддержка</h1>
                     </div>
-                    <div class="main-header_right">
+                    <!--<div v-if="Object.keys(user).length === 0" class="main-header_right">-->
+                    <div v-if="session.customerUser.length < 2" class="main-header_right">
+                        <h3 v-if="language === 0">Please Login</h3>
+                        <h3 v-else>Пожалуйста войдите</h3>
                         <span>en</span>
                         <img @click="changeLanguage" :src="lng_image" id="language" alt="button" height="25">
                         <span>ru</span>
-                        <a href="/login">
+                        <a href="http://10.90.138.10/otrs/userpage.pl">
+                            <img src="/static/assets/img/user.png" height="45px" alt="profile">
+                        </a>
+                    </div>
+                    <div v-else class="main-header_right">
+                        <h3 v-text="session.customerUser"></h3>
+                        <span>en</span>
+                        <img @click="changeLanguage" :src="lng_image" id="language" alt="button" height="25">
+                        <span>ru</span>
+                        <!- add logout href ->
+                        <a @click="logOut">
                             <img src="/static/assets/img/user.png" height="45px" alt="profile">
                         </a>
                     </div>
@@ -84,7 +97,9 @@
                         <tbody>
                         <tr v-for="i in openTickets.length" v-if="((i - 1) >= ticketFirstId && (i - 1) < (ticketFirstId + ticket_number))" v-bind:class="{'white_colored' :isEven(i - 1)}">
                             <td>
-                                <span v-text="getData(openTickets[i - 1].time)"></span>
+                                <a class="ticket_table_date" :href="'http://10.90.138.10/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber=' + getData(openTickets[i - 1].tic_num)" target="_blank">
+                                    <span v-text="getData(openTickets[i - 1].time)"></span>
+                                </a>
                             </td>
                             <td>
                                 <span v-text="openTickets[i - 1].title + ' '" class="ticket_table_title"></span>
@@ -131,7 +146,9 @@
                         <tbody>
                         <tr v-for="i in closedTickets.length" v-if="((i - 1) >= ticketFirstId && (i - 1) < (ticketFirstId + ticket_number))" v-bind:class="{'white_colored' :isEven(i - 1)}">
                             <td>
-                                <span v-text="getData(closedTickets[i - 1].time)"></span>
+                                <a class="ticket_table_date" :href="'http://10.90.138.10/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber=' + getData(openTickets[i - 1].tic_num)" target="_blank">
+                                    <span v-text="getData(openTickets[i - 1].time)"></span>
+                                </a>
                             </td>
                             <td>
                                 <span v-text="closedTickets[i - 1].title + ' '" class="ticket_table_title"></span>
@@ -178,7 +195,9 @@
                         <tbody>
                         <tr v-for="i in tickets.length" v-if="((i - 1) >= ticketFirstId && (i - 1) < (ticketFirstId + ticket_number))" v-bind:class="{'white_colored' :isEven(i - 1)}">
                             <td>
-                                <span v-text="getData(tickets[i - 1].time)"></span>
+                                <a class="ticket_table_date" :href="'http://10.90.138.10/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber=' + getData(openTickets[i - 1].tic_num)" target="_blank">
+                                    <span v-text="getData(openTickets[i - 1].time)"></span>
+                                </a>
                             </td>
                             <td>
                                 <span v-text="tickets[i - 1].title + ' '" class="ticket_table_title"></span>
@@ -271,6 +290,9 @@
                                 <input v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "input"' v-bind:placeholder="field.placeholder" class="input border small-margin">
                                 <textarea v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "textarea"' v-bind:placeholder="field.placeholder" class="textarea border small-margin"></textarea>
                             </div>
+                            <h3 v-if="language === 0">Files</h3>
+                            <h3 v-else>Файлы</h3>
+                            <input type="file" @change="onFileSelected" class="small-margin" multiple>
                             <button v-if="language === 0" v-on:click="setRequest()" class="button">Report</button>
                             <button v-else v-on:click="setRequest()" class="button">Сообщить</button>
                         </div>
