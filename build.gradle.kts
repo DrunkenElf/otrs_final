@@ -9,7 +9,7 @@ plugins {
     application
     id("java-library")
     id("java")
-    kotlin("jvm") version "1.5.10"
+    kotlin("jvm") version "1.5.21"
 }
 
 group "internship"
@@ -18,6 +18,7 @@ version "0.0.1"
 
 application {
     mainClassName = "io.ktor.server.netty.EngineMain"
+
     //applicationDefaultJvmArgs = listOf("-Dio.ktor.development=true")
 }
 
@@ -41,12 +42,17 @@ dependencies {
     implementation("org.jetbrains.exposed:exposed-dao:$exposedVersion")
     implementation("org.jetbrains.exposed:exposed-jdbc:$exposedVersion")
 
+
+
+    implementation("org.apache.commons:commons-text:1.9")
+
     testImplementation("io.ktor:ktor-server-tests:$ktorVersion")
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("src")
 
 sourceSets["main"].resources.srcDirs("resources")
+
 
 val fatJar = task("fatJar", type = Jar::class) {
     manifest {
