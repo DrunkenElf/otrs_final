@@ -11,6 +11,7 @@ let widgets = new Vue({
             customerUser: "",
             sessionId: "",
         },
+        admininfo: "",
         widgets: this.widgetsEN,
         language: 0,
         lng_image: "/static/assets/img/toggle-left.png",
@@ -68,7 +69,8 @@ let widgets = new Vue({
         },
         requestData: {
             userToken: "123",
-            fieldsValue: []
+            fieldsValue: [],
+            file: []
         },
         editData: {
             id: "",
@@ -99,6 +101,7 @@ let widgets = new Vue({
                 }
             }else {
                 this.requestData.fieldsValue = [];
+                this.requestData.file = [];
                 this.editData.fields = [];
                 this.editDataRU.fields = [];
                 this.editData.faq = [];
@@ -307,6 +310,14 @@ let widgets = new Vue({
             axios.post('/123', {headers: {'Content-Type': 'application/json'}, data}).then((response) =>{
                 console.log(response);
             });
+            for (let i = 0; i < this.requestData.file.length; i++) {
+                const formData = new FormData();
+                formData.append('file', this.requestData.file[i]);
+                axios.post('/123', {
+                    headers: {'Content-Type': 'multipart/form-data'}, formData
+                }).then(response => { console.log(response);
+                });
+            }
             this.requestStatus = true;
         },
         showAnswers(questionID) {
@@ -402,6 +413,19 @@ let widgets = new Vue({
         addNewAnswerForNew(ID) {
             this.newCategory.faq[ID].answers.push("Enter new answer");
             this.newCategoryRU.faq[ID].answers.push("Введите новый вопрос");
+        },
+        logOut() {
+            this.user = {};
+            this.admininfo = "";
+            axios.get('/logout').then((response) => {
+                console.log(response);
+                //window.location.reload();
+            })
+        },
+        onFileSelected(event) {
+            for (let i = 0; i < event.target.files.length; i++) {
+                this.requestData.file.push(event.target.files[i]);
+            }
         }
     },
     created: function () {
@@ -420,5 +444,9 @@ let widgets = new Vue({
             this.openTickets = this.getOpenTickets();
             this.closedTickets = this.getClosedTickets();
         });
+        axios.get('/admin_name').then((response) => {
+            console.log(response);
+            this.admininfo = response.data.login;
+        })
     }
 })
