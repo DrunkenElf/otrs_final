@@ -19,7 +19,8 @@ let widgets = new Vue({
         requestData: {
             widgetName: "",
             faq_addon: "",
-            fieldsValue: []
+            fieldsValue: [],
+            file: []
         },
         faq_list: true,
         question_id: 0,
@@ -43,7 +44,8 @@ let widgets = new Vue({
                 }
             }else {
                 this.requestData.fieldsValue = [];
-                this.requestData.faq_addon = "";
+                this.requestData.file = [];
+                //this.requestData.faq_addon = "";
                 this.faq_list = true;
                 this.main_menu = 0
             }
@@ -54,11 +56,20 @@ let widgets = new Vue({
                 alert("Please, login to create ticket")
             else {
                 this.requestData.widgetName = this.widgets[this.display - 1].name
-                let data = JSON.stringify(this.requestData);
-                axios.post('/createTicket', data, {
-                    headers: {
+                //let data = JSON.stringify(this.requestData);
+                const formData = new FormData();
+                formData.append('widgetName', this.requestData.widgetName)
+                formData.append('faq_addon', this.requestData.faq_addon)
+                formData.append('fieldsValue', JSON.stringify(this.requestData.fieldsValue))
+                for (let i = 0; i < this.requestData.file.length; i++) {
+                    formData.append(this.requestData.file[i].name, this.requestData.file[i])
+                }
+
+                axios.post('/createTicket', formData, {
+                    headers: { 'Content-Type': 'multipart/form-data;charset=UTF-8' }
+                    /*headers: {
                         'Content-Type': 'application/json;charset=UTF-8'
-                    }
+                    }*/
                 }).then((response) => {
                     console.log(response);
                     this.requestResp = response.data;
@@ -86,7 +97,8 @@ let widgets = new Vue({
             let arr = [];
             for (let i in this.user) {
                 for (let j in this.user[i].articles) {
-                    arr.push({time: this.user[i].articles[j].createTime, title: this.user[i].title, body: this.user[i].articles[j].body, type: this.user[i].stateType});
+                    arr.push({time: this.user[i].articles[j].createTime, title: this.user[i].title, body: this.user[i].articles[j].body,
+                        type: this.user[i].stateType, tic_num: this.user[i].ticketNumber});
                 }
             }
             this.pageNumbers = Math.ceil(arr.length / 10);
@@ -165,6 +177,22 @@ let widgets = new Vue({
                 this.widgets = this.widgetsEN;
                 this.language = 0;
                 this.lng_image = "/static/assets/img/toggle-left.png"
+            }
+        },
+        logOut() {
+            this.user = {};
+            this.session = {};
+            this.tickets = {};
+            this.openTickets = {};
+            this.closedTickets = {};
+            axios.get("/logout").then((response) => {
+                window.location.reload();
+            })
+        },
+        onFileSelected(event) {
+            this.requestData.file = [];
+            for (let i = 0; i < event.target.files.length; i++) {
+                this.requestData.file.push(event.target.files[i]);
             }
         }
     },
