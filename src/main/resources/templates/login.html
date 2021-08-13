@@ -37,7 +37,7 @@
                     <label>User</label>
                 </div>
                 <div class="txt_field">
-                    <input v-model="passwordField" required>
+                    <input v-model="passwordField" type="password" @keyup.enter="createSession" required>
                     <span></span>
                     <label>Password</label>
                 </div>
