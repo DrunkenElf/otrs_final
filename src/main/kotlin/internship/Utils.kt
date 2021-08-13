@@ -1,5 +1,6 @@
 package internship
 
+import com.google.gson.Gson
 import internship.plugins.UserSession
 import org.jsoup.Connection
 import org.jsoup.Jsoup
@@ -12,6 +13,14 @@ fun File.copyInputStreamToFile(inputstream: InputStream) {
     this.outputStream().use { fileOut ->
         inputstream.copyTo(fileOut)
     }
+}
+
+fun checkAdminLogin(user: User): Boolean{
+    val txt = File("resources/jsons/admin.json").readText()
+    println("check admin $txt")
+    val admin = Gson().fromJson(txt, Admin::class.java)
+    println("check admin: \nadmin: ${admin.login} ${admin.password}\n user: ${user.user} ${user.password}")
+    return user.user == admin.login && user.password == admin.password
 }
 
 fun getTicketsByIds(session: UserSession, ids: List<String>): List<TicketResponse> {
@@ -204,6 +213,14 @@ fun formTicketCreate(ticket: Ticket, sessionId: String): CreatedTicketResp {
                 .append("   <Value>${field?.value}</Value>\n")
                 .append("</DynamicField>\n")
         }*/
+    println("article body:${ticket.article.body}")
+    val attachms = ticket.article.attachments?.map {
+        "         <Attachment>\n" +
+                "             <Content>${it?.data}</Content>\n" +
+                "             <ContentType>${it?.extension}</ContentType>\n" +
+                "             <Filename>${it?.name}</Filename>\n" +
+                "         </Attachment>"
+    }
     val str = "<?xml version='1.0' encoding='UTF-8'?>" +
             "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" " +
             "xmlns:tic=\"http://www.otrs.org/TicketConnector/\">" +
@@ -222,7 +239,8 @@ fun formTicketCreate(ticket: Ticket, sessionId: String): CreatedTicketResp {
             "             <Body>${ticket.article.body}</Body>\n" +
             "             <ContentType>${ticket.article.contentType}</ContentType>\n" +
             "         </Article>\n" +
-           // "${if (ticket.dynamicFields != null) dynaFields.toString() else ""}" +
+            attachms?.joinToString() +
+            // "${if (ticket.dynamicFields != null) dynaFields.toString() else ""}" +
             "      </tic:TicketCreate>\n" +
             "   </soapenv:Body>\n" +
             "</soapenv:Envelope>"
@@ -238,7 +256,7 @@ fun formTicketCreate(ticket: Ticket, sessionId: String): CreatedTicketResp {
             .data("Accept", "text/xml")
             .requestBody(str)
             .execute()
-    } catch (e: Error){
+    } catch (e: Error) {
         println(e.message)
         e.printStackTrace()
     }
