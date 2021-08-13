@@ -30,10 +30,11 @@
                     <h1 v-else>IT Поддержка</h1>
                 </div>
                 <div class="main-header_right">
+                    <h3 v-text="admininfo"></h3>
                     <span>en</span>
                     <img @click="changeLanguage" :src="lng_image" id="language" alt="button" height="25">
                     <span>ru</span>
-                    <a href="/">
+                    <a @click="logOut" href="/">
                         <img src="/static/assets/img/user.png" height="45px" alt="profile">
                     </a>
                 </div>
@@ -63,7 +64,7 @@
                 <a v-if="language === 0" v-on:click="setDisplay(widget.id)" class="grid-widget-link">Report Issue</a>
                 <a v-else v-on:click="setDisplay(widget.id)" class="grid-widget-link">Сообщить о проблеме</a>
             </div>
-            <div class="grid-element-new border">
+            <div v-if="Object.keys(user).length !== 0" class="grid-element-new border">
                 <img src="/static/assets/img/plus.png" alt="plus" width="100">
                 <div>
                     <a v-if="language === 0" v-on:click="setDisplay(404)"><h4>Add new category</h4></a>
@@ -91,9 +92,15 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="i in openTickets.length" v-if="((i - 1) >= ticketFirstId && (i - 1) < (ticketFirstId + ticket_number))" v-bind:class="{'white_colored' :isEven(i - 1)}">
+                    <tr v-for="i in openTickets.length"
+                        v-if="((i - 1) >= ticketFirstId && (i - 1) < (ticketFirstId + ticket_number))"
+                        v-bind:class="{'white_colored' :isEven(i - 1)}">
                         <td>
-                            <span v-text="getData(openTickets[i - 1].time)"></span>
+                            <a class="ticket_table_date"
+                               :href="'http://10.90.138.10/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber=' + getData(openTickets[i - 1].time)"
+                               target="_blank">
+                                <span v-text="getData(openTickets[i - 1].time)"></span>
+                            </a>
                         </td>
                         <td>
                             <span v-text="openTickets[i - 1].title + ' '" class="ticket_table_title"></span>
@@ -135,9 +142,15 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="i in closedTickets.length" v-if="((i - 1) >= ticketFirstId && (i - 1) < (ticketFirstId + ticket_number))" v-bind:class="{'white_colored' :isEven(i - 1)}">
+                    <tr v-for="i in closedTickets.length"
+                        v-if="((i - 1) >= ticketFirstId && (i - 1) < (ticketFirstId + ticket_number))"
+                        v-bind:class="{'white_colored' :isEven(i - 1)}">
                         <td>
-                            <span v-text="getData(closedTickets[i - 1].time)"></span>
+                            <a class="ticket_table_date"
+                               :href="'http://10.90.138.10/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber=' + getData(openTickets[i - 1].time)"
+                               target="_blank">
+                                <span v-text="getData(openTickets[i - 1].time)"></span>
+                            </a>
                         </td>
                         <td>
                             <span v-text="closedTickets[i - 1].title + ' '" class="ticket_table_title"></span>
@@ -179,9 +192,15 @@
                     </tr>
                     </thead>
                     <tbody>
-                    <tr v-for="i in tickets.length" v-if="((i - 1) >= ticketFirstId && (i - 1) < (ticketFirstId + ticket_number))" v-bind:class="{'white_colored' :isEven(i - 1)}">
+                    <tr v-for="i in tickets.length"
+                        v-if="((i - 1) >= ticketFirstId && (i - 1) < (ticketFirstId + ticket_number))"
+                        v-bind:class="{'white_colored' :isEven(i - 1)}">
                         <td>
-                            <span v-text="getData(tickets[i - 1].time)"></span>
+                            <a class="ticket_table_date"
+                               :href="'http://10.90.138.10/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber=' + getData(openTickets[i - 1].time)"
+                               target="_blank">
+                                <span v-text="getData(openTickets[i - 1].time)"></span>
+                            </a>
                         </td>
                         <td>
                             <span v-text="tickets[i - 1].title + ' '" class="ticket_table_title"></span>
@@ -267,9 +286,16 @@
                         <h2 v-else class="middle-margin">Заполните форму</h2>
                         <div class="request-field" v-for="field in widget.fields">
                             <h3 v-text="field.title"></h3>
-                            <input v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "input"' v-bind:placeholder="field.placeholder" class="input border small-margin">
-                            <textarea v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "textarea"' v-bind:placeholder="field.placeholder" class="textarea border small-margin"></textarea>
+                            <input v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value"
+                                   v-if='field.type === "input"' v-bind:placeholder="field.placeholder"
+                                   class="input border small-margin">
+                            <textarea v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value"
+                                      v-if='field.type === "textarea"' v-bind:placeholder="field.placeholder"
+                                      class="textarea border small-margin"></textarea>
                         </div>
+                        <h3 v-if="language === 0">Files</h3>
+                        <h3 v-else>Файлы</h3>
+                        <input type="file" @change="onFileSelected" class="small-margin" multiple>
                         <button v-if="language === 0" v-on:click="sendRequest()" class="button">Report</button>
                         <button v-else v-on:click="setRequest()" class="button">Сообщить</button>
                     </div>
@@ -318,14 +344,17 @@
                     <input v-model.trim="editData.name" placeholder="Enter the title" class="input border small-margin">
                     <h3 v-if="language === 0">Title [ru]</h3>
                     <h3 v-else>Заголовок [ru]</h3>
-                    <input v-model.trim="editDataRU.name" placeholder="Введите заголовок" class="input border small-margin">
+                    <input v-model.trim="editDataRU.name" placeholder="Введите заголовок"
+                           class="input border small-margin">
 
                     <h3 v-if="language === 0">Description [en]</h3>
                     <h3 v-else>Описание [en]</h3>
-                    <input v-model.trim="editData.description" placeholder="Characterise the category" class="input border small-margin">
+                    <input v-model.trim="editData.description" placeholder="Characterise the category"
+                           class="input border small-margin">
                     <h3 v-if="language === 0">Description [ru]</h3>
                     <h3 v-else>Описание [ru]</h3>
-                    <input v-model.trim="editDataRU.description" placeholder="Охарактеризируйте категорию" class="input border small-margin">
+                    <input v-model.trim="editDataRU.description" placeholder="Охарактеризируйте категорию"
+                           class="input border small-margin">
 
                     <hr class="middle-margin">
 
@@ -334,21 +363,28 @@
 
                     <div class="fields" v-for="i in editData.fields.length">
 
-                        <input v-model.trim="editData.fields[i - 1].title" placeholder="Field Title" class="input small-size border small-margin">
-                        <input v-model.trim="editData.fields[i - 1].placeholder" placeholder="Field Description" class="input middle-size border small-margin">
+                        <input v-model.trim="editData.fields[i - 1].title" placeholder="Field Title"
+                               class="input small-size border small-margin">
+                        <input v-model.trim="editData.fields[i - 1].placeholder" placeholder="Field Description"
+                               class="input middle-size border small-margin">
                         <select v-model="editData.fields[i - 1].type" class="select border small-margin">
                             <option v-if="language === 0" disabled value="" class="border">Type</option>
                             <option v-else disabled value="" class="border">Тип</option>
-                            <option v-for="(key, name) in fieldTypes" :value="name" v-text="key" class="border"></option>
+                            <option v-for="(key, name) in fieldTypes" :value="name" v-text="key"
+                                    class="border"></option>
                         </select>
                         <i class="fas fa-times" v-on:click="deleteField(i - 1)"></i>
 
-                        <input v-model.trim="editDataRU.fields[i - 1].title" placeholder="Заголовок Поля" class="input small-size border small-margin">
-                        <input v-model.trim="editDataRU.fields[i - 1].placeholder" placeholder="Описание Поля" class="input middle-size border small-margin">
+                        <input v-model.trim="editDataRU.fields[i - 1].title" placeholder="Заголовок Поля"
+                               class="input small-size border small-margin">
+                        <input v-model.trim="editDataRU.fields[i - 1].placeholder" placeholder="Описание Поля"
+                               class="input middle-size border small-margin">
                     </div>
                     <div class="add-field">
                         <hr>
-                        <button v-if="language === 0" v-on:click="addField" class="add-field__button">+ Add issue field</button>
+                        <button v-if="language === 0" v-on:click="addField" class="add-field__button">+ Add issue
+                            field
+                        </button>
                         <button v-else v-on:click="addField" class="add-field__button">+ Добавить новое поле</button>
                         <hr>
                     </div>
@@ -363,22 +399,36 @@
 
                             <div class="faq_edit-title">
                                 <div class="faq_edit-name">
-                                    <img @click="changeImage('image' + widget.id + editData.faq[i - 1].id); showAnswers('answer' + widget.id + editData.faq[i - 1].id)" src="/static/assets/img/chevron-down.png" alt="arrow" :id="'image' + widget.id + editData.faq[i - 1].id">
-                                    <h3 @click="changeType(widget.id.toString() + editData.faq[i - 1].id.toString())" v-show="true" v-text="editData.faq[i - 1].question" :id="'h3' + widget.id + editData.faq[i - 1].id"></h3>
-                                    <input v-show="false" v-model.trim="editData.faq[i - 1].question"  class="input border" :id="'input' + widget.id + editData.faq[i - 1].id">
+                                    <img @click="changeImage('image' + widget.id + editData.faq[i - 1].id); showAnswers('answer' + widget.id + editData.faq[i - 1].id)"
+                                         src="/static/assets/img/chevron-down.png" alt="arrow"
+                                         :id="'image' + widget.id + editData.faq[i - 1].id">
+                                    <h3 @click="changeType(widget.id.toString() + editData.faq[i - 1].id.toString())"
+                                        v-show="true" v-text="editData.faq[i - 1].question"
+                                        :id="'h3' + widget.id + editData.faq[i - 1].id"></h3>
+                                    <input v-show="false" v-model.trim="editData.faq[i - 1].question"
+                                           class="input border" :id="'input' + widget.id + editData.faq[i - 1].id">
                                 </div>
 
-                                <i @click="deleteFAQ(i - 1)" class="fas fa-times" :id="'cross' + widget.id + editData.faq[i - 1].id"></i>
-                                <i @click="changeType(widget.id.toString() + editData.faq[i - 1].id.toString())" v-show="false" class="fas fa-check" :id="'check' + widget.id + editData.faq[i - 1].id"></i>
+                                <i @click="deleteFAQ(i - 1)" class="fas fa-times"
+                                   :id="'cross' + widget.id + editData.faq[i - 1].id"></i>
+                                <i @click="changeType(widget.id.toString() + editData.faq[i - 1].id.toString())"
+                                   v-show="false" class="fas fa-check"
+                                   :id="'check' + widget.id + editData.faq[i - 1].id"></i>
                             </div>
 
                             <div class="faq_edit-title">
                                 <div class="faq_edit-name faq_edit-name-ru">
-                                    <h3 @click="changeTypeRU('ru' + widget.id.toString() + editDataRU.faq[i - 1].id.toString())" v-show="true" v-text="editDataRU.faq[i - 1].question" :id="'h3ru' + widget.id + editDataRU.faq[i - 1].id"></h3>
-                                    <input v-show="false" v-model.trim="editDataRU.faq[i - 1].question"  class="input border" :id="'inputru' + widget.id + editDataRU.faq[i - 1].id">
+                                    <h3 @click="changeType('ru' + widget.id.toString() + editDataRU.faq[i - 1].id.toString())"
+                                        v-show="true" v-text="editDataRU.faq[i - 1].question"
+                                        :id="'h3ru' + widget.id + editDataRU.faq[i - 1].id"></h3>
+                                    <input v-show="false" v-model.trim="editDataRU.faq[i - 1].question"
+                                           class="input border" :id="'inputru' + widget.id + editDataRU.faq[i - 1].id">
                                 </div>
-
-                                <i @click="changeTypeRU('ru' + widget.id.toString() + editDataRU.faq[i - 1].id.toString())" v-show="false" class="fas fa-check" :id="'checkru' + widget.id + editDataRU.faq[i - 1].id"></i>
+                                <i style="visibility: hidden" class="fas fa-times"
+                                   :id="'crossru' + widget.id + editDataRU.faq[i - 1].id"></i>
+                                <i @click="changeType('ru' + widget.id.toString() + editDataRU.faq[i - 1].id.toString())"
+                                   v-show="false" class="fas fa-check"
+                                   :id="'checkru' + widget.id + editDataRU.faq[i - 1].id"></i>
                             </div>
 
 
@@ -386,26 +436,45 @@
                                 <div v-for="answer in editData.faq[i - 1].answers.length" class="middle-margin">
                                     <div class="faq_edit-answer">
                                         <div class="faq_edit-answer-name">
-                                            <h4 @click="changeAnswer(widget.id.toString() + editData.faq[i - 1].id.toString() + answer.toString())" v-text="editData.faq[i - 1].answers[answer - 1]" :id="'h4' + widget.id + editData.faq[i - 1].id + answer"></h4>
-                                            <input v-show="false" v-model.trim="editData.faq[i - 1].answers[answer - 1]" class="input border" :id="'input' + widget.id + editData.faq[i - 1].id + answer">
+                                            <h4 @click="changeAnswer(widget.id.toString() + editData.faq[i - 1].id.toString() + answer.toString())"
+                                                v-text="editData.faq[i - 1].answers[answer - 1]"
+                                                :id="'h4' + widget.id + editData.faq[i - 1].id + answer"></h4>
+                                            <input v-show="false" v-model.trim="editData.faq[i - 1].answers[answer - 1]"
+                                                   class="input border"
+                                                   :id="'input' + widget.id + editData.faq[i - 1].id + answer">
                                         </div>
-                                        <i @click="deleteAnswer(editData.faq[i - 1].id, answer - 1)" class="fas fa-times" :id="'cross' + widget.id + editData.faq[i - 1].id + answer"></i>
-                                        <i @click="changeAnswer(widget.id.toString() + editData.faq[i - 1].id.toString() + answer.toString())" v-show="false" class="fas fa-check" :id="'check' + widget.id + editData.faq[i - 1].id + answer"></i>
+                                        <i @click="deleteAnswer(editData.faq[i - 1].id, answer - 1)"
+                                           class="fas fa-times"
+                                           :id="'cross' + widget.id + editData.faq[i - 1].id + answer"></i>
+                                        <i @click="changeAnswer(widget.id.toString() + editData.faq[i - 1].id.toString() + answer.toString())"
+                                           v-show="false" class="fas fa-check"
+                                           :id="'check' + widget.id + editData.faq[i - 1].id + answer"></i>
                                     </div>
 
                                     <div class="faq_edit-answer">
                                         <div class="faq_edit-answer-name">
-                                            <h4 @click="changeAnswerRU('ru' + widget.id.toString() + editDataRU.faq[i - 1].id.toString() + answer.toString())" v-text="editDataRU.faq[i - 1].answers[answer - 1]" :id="'h4ru' + widget.id + editData.faq[i - 1].id + answer"></h4>
-                                            <input v-show="false" v-model.trim="editDataRU.faq[i - 1].answers[answer - 1]" class="input border" :id="'inputru' + widget.id + editDataRU.faq[i - 1].id + answer">
+                                            <h4 @click="changeAnswerRU('ru' + widget.id.toString() + editDataRU.faq[i - 1].id.toString() + answer.toString())"
+                                                v-text="editDataRU.faq[i - 1].answers[answer - 1]"
+                                                :id="'h4ru' + widget.id + editData.faq[i - 1].id + answer"></h4>
+                                            <input v-show="false"
+                                                   v-model.trim="editDataRU.faq[i - 1].answers[answer - 1]"
+                                                   class="input border"
+                                                   :id="'inputru' + widget.id + editDataRU.faq[i - 1].id + answer">
                                         </div>
-                                        <i @click="changeAnswerRU('ru' + widget.id.toString() + editDataRU.faq[i - 1].id.toString() + answer.toString())" v-show="false" class="fas fa-check" :id="'checkru' + widget.id + editDataRU.faq[i - 1].id + answer"></i>
+                                        <i @click="changeAnswerRU('ru' + widget.id.toString() + editDataRU.faq[i - 1].id.toString() + answer.toString())"
+                                           v-show="false" class="fas fa-check"
+                                           :id="'checkru' + widget.id + editDataRU.faq[i - 1].id + answer"></i>
                                     </div>
                                 </div>
 
                                 <div class="add-field add-field-faq">
                                     <hr>
-                                    <button v-if="language === 0" v-on:click="addNewAnswer(editData.faq[i - 1].id)" class="add-field__button">+ Add new FAQ</button>
-                                    <button v-else v-on:click="addNewAnswer(editData.faq[i - 1].id)" class="add-field__button">+ Добавить новый FAQ</button>
+                                    <button v-if="language === 0" v-on:click="addNewAnswer(editData.faq[i - 1].id)"
+                                            class="add-field__button">+ Add new FAQ
+                                    </button>
+                                    <button v-else v-on:click="addNewAnswer(editData.faq[i - 1].id)"
+                                            class="add-field__button">+ Добавить новый FAQ
+                                    </button>
                                     <hr>
                                 </div>
 
@@ -414,15 +483,20 @@
 
                         <div class="add-field">
                             <hr>
-                            <button v-if="language === 0" v-on:click="addNewFAQ" class="add-field__button">+ Add new FAQ</button>
+                            <button v-if="language === 0" v-on:click="addNewFAQ" class="add-field__button">+ Add new
+                                FAQ
+                            </button>
                             <button v-else v-on:click="addNewFAQ" class="add-field__button">+ Добвить новый FAQ</button>
                             <hr>
                         </div>
                     </div>
                     <div>
                         <div class="buttons">
-                            <button v-if="language === 0" v-on:click="deleteCategory(widget.id)" class="button button_red">Delete</button>
-                            <button v-else v-on:click="deleteCategory(widget.id)" class="button button_red">Удалить</button>
+                            <button v-if="language === 0" v-on:click="deleteCategory(widget.id)"
+                                    class="button button_red">Delete
+                            </button>
+                            <button v-else v-on:click="deleteCategory(widget.id)" class="button button_red">Удалить
+                            </button>
                             <button v-if="language === 0" v-on:click="updateCategory" class="button">Edit</button>
                             <button v-else v-on:click="updateCategory" class="button">Изменить</button>
                         </div>
@@ -472,15 +546,18 @@
 
                 <h3 v-if="language === 0">Title [ru]</h3>
                 <h3 v-else>Заголовок [ru]</h3>
-                <input v-model.trim="newCategoryRU.name" placeholder="Введите заголовок" class="input border small-margin">
+                <input v-model.trim="newCategoryRU.name" placeholder="Введите заголовок"
+                       class="input border small-margin">
 
                 <h3 v-if="language === 0">Description [en]</h3>
                 <h3 v-else>Описание [en]</h3>
-                <input v-model.trim="newCategory.description" placeholder="Characterise the category" class="input border small-margin">
+                <input v-model.trim="newCategory.description" placeholder="Characterise the category"
+                       class="input border small-margin">
 
                 <h3 v-if="language === 0">Description [ru]</h3>
                 <h3 v-else>Описание [ru]</h3>
-                <input v-model.trim="newCategoryRU.description" placeholder="Охарактеризируйте категорию" class="input border small-margin">
+                <input v-model.trim="newCategoryRU.description" placeholder="Охарактеризируйте категорию"
+                       class="input border small-margin">
 
                 <hr class="middle-margin">
 
@@ -489,8 +566,10 @@
 
                 <div class="fields" v-for="i in newCategory.fields.length">
 
-                    <input v-model.trim="newCategory.fields[i - 1].title" placeholder="Field Title" class="input small-size border small-margin">
-                    <input v-model.trim="newCategory.fields[i - 1].placeholder" placeholder="Field Description" class="input middle-size border small-margin">
+                    <input v-model.trim="newCategory.fields[i - 1].title" placeholder="Field Title"
+                           class="input small-size border small-margin">
+                    <input v-model.trim="newCategory.fields[i - 1].placeholder" placeholder="Field Description"
+                           class="input middle-size border small-margin">
                     <select v-model="newCategory.fields[i - 1].type" class="select border small-margin">
                         <option v-if="language === 0" disabled value="" class="border">Type</option>
                         <option v-else disabled value="" class="border">Тип</option>
@@ -498,12 +577,16 @@
                     </select>
                     <i class="fas fa-times" v-on:click="deleteNewField(i - 1)"></i>
 
-                    <input v-model.trim="newCategoryRU.fields[i - 1].title" placeholder="Заголовок Поля" class="input small-size border small-margin">
-                    <input v-model.trim="newCategoryRU.fields[i - 1].placeholder" placeholder="Описание Поля" class="input middle-size border small-margin">
+                    <input v-model.trim="newCategoryRU.fields[i - 1].title" placeholder="Заголовок Поля"
+                           class="input small-size border small-margin">
+                    <input v-model.trim="newCategoryRU.fields[i - 1].placeholder" placeholder="Описание Поля"
+                           class="input middle-size border small-margin">
                 </div>
                 <div class="add-field">
                     <hr>
-                    <button v-if="language === 0" v-on:click="addNewField()" class="add-field__button">+ Add issue field</button>
+                    <button v-if="language === 0" v-on:click="addNewField()" class="add-field__button">+ Add issue
+                        field
+                    </button>
                     <button v-else v-on:click="addNewField()" class="add-field__button">+ Добавить новое поле</button>
                     <hr>
                 </div>
@@ -518,47 +601,78 @@
 
                         <div class="faq_edit-title">
                             <div class="faq_edit-name">
-                                <img @click="changeImage('image' + '404' + newCategory.faq[i - 1].id); showAnswers('answer' + '404' + newCategory.faq[i - 1].id)" src="/static/assets/img/chevron-down.png" alt="arrow" :id="'image' + '404' + newCategory.faq[i - 1].id">
-                                <h3 @click="changeType('404' + newCategory.faq[i - 1].id.toString())" v-show="true" v-text="newCategory.faq[i - 1].question" :id="'h3' + '404' + newCategory.faq[i - 1].id"></h3>
-                                <input v-show="false" v-model.trim="newCategory.faq[i - 1].question"  class="input border" :id="'input' + '404' + newCategory.faq[i - 1].id">
+                                <img @click="changeImage('image' + '404' + newCategory.faq[i - 1].id); showAnswers('answer' + '404' + newCategory.faq[i - 1].id)"
+                                     src="/static/assets/img/chevron-down.png" alt="arrow"
+                                     :id="'image' + '404' + newCategory.faq[i - 1].id">
+                                <h3 @click="changeType('404' + newCategory.faq[i - 1].id.toString())" v-show="true"
+                                    v-text="newCategory.faq[i - 1].question"
+                                    :id="'h3' + '404' + newCategory.faq[i - 1].id"></h3>
+                                <input v-show="false" v-model.trim="newCategory.faq[i - 1].question"
+                                       class="input border" :id="'input' + '404' + newCategory.faq[i - 1].id">
                             </div>
-                            <i @click="deleteNewFAQ(newCategory.faq[i - 1].id)" class="fas fa-times" :id="'cross' + '404' + newCategory.faq[i - 1].id"></i>
-                            <i @click="changeType('404' + newCategory.faq[i - 1].id.toString())" v-show="false" class="fas fa-check" :id="'check' + '404' + newCategory.faq[i - 1].id"></i>
+                            <i @click="deleteNewFAQ(newCategory.faq[i - 1].id)" class="fas fa-times"
+                               :id="'cross' + '404' + newCategory.faq[i - 1].id"></i>
+                            <i @click="changeType('404' + newCategory.faq[i - 1].id.toString())" v-show="false"
+                               class="fas fa-check" :id="'check' + '404' + newCategory.faq[i - 1].id"></i>
                         </div>
 
                         <div class="faq_edit-title">
                             <div class="faq_edit-name faq_edit-name-ru">
-                                <h3 @click="changeTypeRU('ru' + '404' + newCategoryRU.faq[i - 1].id.toString())" v-show="true" v-text="newCategoryRU.faq[i - 1].question" :id="'h3ru' + '404' + newCategoryRU.faq[i - 1].id"></h3>
-                                <input v-show="false" v-model.trim="newCategoryRU.faq[i - 1].question"  class="input border" :id="'inputru' + '404' + newCategoryRU.faq[i - 1].id">
+                                <h3 @click="changeTypeRU('ru' + '404' + newCategoryRU.faq[i - 1].id.toString())"
+                                    v-show="true" v-text="newCategoryRU.faq[i - 1].question"
+                                    :id="'h3ru' + '404' + newCategoryRU.faq[i - 1].id"></h3>
+                                <input v-show="false" v-model.trim="newCategoryRU.faq[i - 1].question"
+                                       class="input border" :id="'inputru' + '404' + newCategoryRU.faq[i - 1].id">
                             </div>
 
-                            <i @click="changeTypeRU('ru' + '404' + newCategoryRU.faq[i - 1].id.toString())" v-show="false" class="fas fa-check" :id="'checkru' + '404' + newCategoryRU.faq[i - 1].id"></i>
+                            <i @click="changeTypeRU('ru' + '404' + newCategoryRU.faq[i - 1].id.toString())"
+                               v-show="false" class="fas fa-check"
+                               :id="'checkru' + '404' + newCategoryRU.faq[i - 1].id"></i>
                         </div>
 
                         <div v-show="false" :id="'answer' + '404' + newCategory.faq[i - 1].id">
                             <div v-for="answer in newCategory.faq[i - 1].answers.length" class="middle-margin">
                                 <div class="faq_edit-answer">
                                     <div class="faq_edit-answer-name">
-                                        <h4 @click="changeAnswer('404' + newCategory.faq[i - 1].id.toString() + answer.toString())" v-text="newCategory.faq[i - 1].answers[answer - 1]" :id="'h4' + '404' + newCategory.faq[i - 1].id + answer"></h4>
-                                        <input v-show="false" v-model.trim="newCategory.faq[i - 1].answers[answer - 1]" class="input border" :id="'input' + '404' + newCategory.faq[i - 1].id + answer">
+                                        <h4 @click="changeAnswer('404' + newCategory.faq[i - 1].id.toString() + answer.toString())"
+                                            v-text="newCategory.faq[i - 1].answers[answer - 1]"
+                                            :id="'h4' + '404' + newCategory.faq[i - 1].id + answer"></h4>
+                                        <input v-show="false" v-model.trim="newCategory.faq[i - 1].answers[answer - 1]"
+                                               class="input border"
+                                               :id="'input' + '404' + newCategory.faq[i - 1].id + answer">
                                     </div>
-                                    <i @click="deleteNewAnswer(newCategory.faq[i - 1].id, answer - 1)" class="fas fa-times" :id="'cross' + '404' + newCategory.faq[i - 1].id + answer"></i>
-                                    <i @click="changeAnswer('404' + newCategory.faq[i - 1].id.toString() + answer.toString())" v-show="false" class="fas fa-check" :id="'check' + '404' + newCategory.faq[i - 1].id + answer"></i>
+                                    <i @click="deleteNewAnswer(newCategory.faq[i - 1].id, answer - 1)"
+                                       class="fas fa-times"
+                                       :id="'cross' + '404' + newCategory.faq[i - 1].id + answer"></i>
+                                    <i @click="changeAnswer('404' + newCategory.faq[i - 1].id.toString() + answer.toString())"
+                                       v-show="false" class="fas fa-check"
+                                       :id="'check' + '404' + newCategory.faq[i - 1].id + answer"></i>
                                 </div>
 
                                 <div class="faq_edit-answer">
                                     <div class="faq_edit-answer-name">
-                                        <h4 @click="changeAnswerRU('ru' + '404' + newCategoryRU.faq[i - 1].id.toString() + answer.toString())" v-text="newCategoryRU.faq[i - 1].answers[answer - 1]" :id="'h4ru' + '404' + newCategoryRU.faq[i - 1].id + answer"></h4>
-                                        <input v-show="false" v-model.trim="newCategoryRU.faq[i - 1].answers[answer - 1]" class="input border" :id="'inputru' + '404' + newCategoryRU.faq[i - 1].id + answer">
+                                        <h4 @click="changeAnswerRU('ru' + '404' + newCategoryRU.faq[i - 1].id.toString() + answer.toString())"
+                                            v-text="newCategoryRU.faq[i - 1].answers[answer - 1]"
+                                            :id="'h4ru' + '404' + newCategoryRU.faq[i - 1].id + answer"></h4>
+                                        <input v-show="false"
+                                               v-model.trim="newCategoryRU.faq[i - 1].answers[answer - 1]"
+                                               class="input border"
+                                               :id="'inputru' + '404' + newCategoryRU.faq[i - 1].id + answer">
                                     </div>
-                                    <i @click="changeAnswerRU('ru' + '404' + newCategoryRU.faq[i - 1].id.toString() + answer.toString())" v-show="false" class="fas fa-check" :id="'checkru' + '404' + newCategoryRU.faq[i - 1].id + answer"></i>
+                                    <i @click="changeAnswerRU('ru' + '404' + newCategoryRU.faq[i - 1].id.toString() + answer.toString())"
+                                       v-show="false" class="fas fa-check"
+                                       :id="'checkru' + '404' + newCategoryRU.faq[i - 1].id + answer"></i>
                                 </div>
                             </div>
 
                             <div class="add-field add-field-faq">
                                 <hr>
-                                <button v-if="language === 0" v-on:click="addNewAnswerForNew(newCategory.faq[i - 1].id)" class="add-field__button">+ Add new FAQ</button>
-                                <button v-else v-on:click="addNewAnswerForNew(newCategory.faq[i - 1].id)" class="add-field__button">+ Добавить новый FAQ</button>
+                                <button v-if="language === 0" v-on:click="addNewAnswerForNew(newCategory.faq[i - 1].id)"
+                                        class="add-field__button">+ Add new FAQ
+                                </button>
+                                <button v-else v-on:click="addNewAnswerForNew(newCategory.faq[i - 1].id)"
+                                        class="add-field__button">+ Добавить новый FAQ
+                                </button>
                                 <hr>
                             </div>
                         </div>
@@ -567,8 +681,11 @@
 
                     <div class="add-field">
                         <hr>
-                        <button v-if="language === 0" v-on:click="addNewFAQforNew" class="add-field__button">+ Add new FAQ</button>
-                        <button v-else v-on:click="addNewFAQforNew" class="add-field__button">+ Добавить новый FAQ</button>
+                        <button v-if="language === 0" v-on:click="addNewFAQforNew" class="add-field__button">+ Add new
+                            FAQ
+                        </button>
+                        <button v-else v-on:click="addNewFAQforNew" class="add-field__button">+ Добавить новый FAQ
+                        </button>
                         <hr>
                     </div>
                 </div>
