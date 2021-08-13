@@ -19,10 +19,15 @@ data class Customer(
     val customerUser: String,
     val customerID: String,
 )*/
+data class Admin(
+    val login: String,
+    val password: String
+)
 data class Article(
     val subject: String,
     val body: String,
-    val contentType: String = "text/plain; charset=utf8"
+    val contentType: String = "text/plain; charset=utf8",
+    val attachments: ArrayList<FileData?>?
 )
 
 data class Field(
@@ -31,9 +36,16 @@ data class Field(
 )
 
 data class RequestData(
-    val widgetName: String,
-    val faq_addon: String?,
-    val fieldsValue: ArrayList<Field?>?
+    var widgetName: String?,
+    var faq_addon: String?,
+    var fieldsValue: ArrayList<Field?>?,
+    var files: ArrayList<FileData?>?
+)
+
+data class FileData(
+    val name: String?,
+    val extension: String?,
+    val data: String?
 )
 data class User(
     val user: String,
