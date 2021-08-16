@@ -98,11 +98,11 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   height: 45px;
   max-width: 100%;
 }
@@ -111,8 +111,8 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 .main-header_left h1 {
   margin-left: 10px;
@@ -122,11 +122,14 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 .main-header_right * {
   margin-right: 5px;
+}
+.main-header_right h3 {
+  margin-right: 15px;
 }
 .main-header_right img {
   cursor: pointer;
@@ -140,18 +143,18 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   padding-top: 10px;
   padding-bottom: 10px;
 }
 .main-header_links a {
   -webkit-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
+      -ms-flex: 1;
+          flex: 1;
   padding: 0.5em;
   text-align: center;
   border-right: 1px solid #80BC00;
@@ -177,8 +180,8 @@ a:hover {
   display: -ms-grid;
   display: grid;
   -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   -ms-grid-columns: 30% 2em 30% 2em 30%;
   grid-template-columns: repeat(3, 30%);
   grid-auto-rows: 150px;
@@ -188,6 +191,16 @@ a:hover {
 
 .grid-element {
   position: relative;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-flow: column wrap;
+          flex-flow: column wrap;
+  -webkit-box-pack: start;
+      -ms-flex-pack: start;
+          justify-content: flex-start;
   padding: 1em;
   background-color: #fff;
   border-radius: 20px;
@@ -195,19 +208,13 @@ a:hover {
 .grid-element * {
   margin: 2px 0 2px 0;
 }
-.grid-element h5 {
-  position: absolute;
-  bottom: 1em;
-  right: 1em;
-  color: cornflowerblue;
-}
 
 .grid-element-new {
   display: -ms-grid;
   display: grid;
   -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   -ms-grid-columns: 1fr;
   grid-template-columns: 1fr;
   padding: 1em;
@@ -225,6 +232,9 @@ a:hover {
 .grid-widget-link {
   position: absolute;
   bottom: 1em;
+  right: 1em;
+  color: cornflowerblue;
+  text-decoration: underline;
 }
 
 .buttons {
@@ -232,8 +242,8 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: end;
-  -ms-flex-pack: end;
-  justify-content: flex-end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
 }
 
 .button {
@@ -255,8 +265,8 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   height: 45px;
   max-width: 100%;
 }
@@ -269,8 +279,8 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 
 .faq {
@@ -284,11 +294,11 @@ a:hover {
   display: flex;
   padding: 4px 0;
   -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
   border-top: 1px solid #D1D1D1;
   border-bottom: 1px solid #D1D1D1;
 }
@@ -304,15 +314,15 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
 }
 .faq_buttons {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-pack: distribute;
-  justify-content: space-around;
+      justify-content: space-around;
 }
 
 .faq_edit {
@@ -327,11 +337,11 @@ a:hover {
   display: flex;
   width: 100%;
   -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
 }
 .faq_edit-title i {
   margin-left: 10px;
@@ -342,12 +352,24 @@ a:hover {
   display: flex;
   width: 100%;
   -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-bottom: 5px;
 }
 .faq_edit-name h3, .faq_edit-name img {
   cursor: pointer;
   line-height: 2em;
+}
+.faq_edit-name h3 {
+  width: 100%;
+  padding: 2px;
+  border: 1px solid #80BC00;
+  border-radius: 8px;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+.faq_edit-name h3:hover {
+  background-color: white;
 }
 .faq_edit-name-ru h3, .faq_edit-name-ru input {
   margin-left: 36px;
@@ -357,13 +379,13 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   -webkit-box-pack: justify;
-  -ms-flex-pack: justify;
-  justify-content: space-between;
-  padding-left: 40px;
-  width: 96%;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding-left: 80px;
+  width: 88%;
 }
 .faq_edit-answer h4 {
   line-height: 2em;
@@ -374,11 +396,21 @@ a:hover {
   display: flex;
   width: 100%;
   -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
+  margin-bottom: 5px;
 }
 .faq_edit-answer-name h4 {
+  width: 100%;
   cursor: pointer;
+  padding: 2px;
+  border: 1px solid #80BC00;
+  border-radius: 8px;
+  -webkit-transition: 0.5s;
+  transition: 0.5s;
+}
+.faq_edit-answer-name h4:hover {
+  background-color: white;
 }
 .faq_edit-answer i {
   margin-left: 10px;
@@ -426,8 +458,8 @@ a:hover {
   display: -ms-grid;
   display: grid;
   -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
 }
 .successful * {
   margin: 5px auto 5px auto;
@@ -441,18 +473,18 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   -webkit-box-align: center;
-  -ms-flex-align: center;
-  align-items: center;
+      -ms-flex-align: center;
+          align-items: center;
   height: 10px;
   margin: 15px 0 15px 0;
 }
 .add-field hr {
   -webkit-box-flex: 1;
-  -ms-flex: 1;
-  flex: 1;
+      -ms-flex: 1;
+          flex: 1;
   border: none;
   background-color: #80BC00;
   height: 1px;
@@ -488,7 +520,7 @@ a:hover {
 .ticket_table table {
   border-collapse: collapse;
   border-spacing: 0;
-  width: 0;
+  width: 100%;
 }
 .ticket_table thead {
   display: none;
@@ -504,6 +536,9 @@ a:hover {
   text-align: left;
   padding: 5px 10px 5px 10px;
 }
+.ticket_table_date {
+  color: black;
+}
 .ticket_table_title {
   padding-left: 15px;
   padding-right: 8px;
@@ -518,42 +553,60 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
-  -ms-flex-pack: center;
-  justify-content: center;
+      -ms-flex-pack: center;
+          justify-content: center;
   margin-top: 10px;
-}
-.ticket_table_buttons button {
-  padding: 0.19em;
-  font-size: 16px;
-  margin-right: 8px;
 }
 .ticket_table_buttons span {
   margin-right: 8px;
   font-size: 16px;
   padding: 0.19em;
 }
+.ticket_table_buttons button {
+  border: 1px solid #B0B0B0;
+}
+.ticket_table_buttons__small {
+  font-size: 16px;
+  margin-right: 8px;
+  padding: 4px 4px 4px 4px;
+  background-color: white;
+}
+.ticket_table_buttons__big {
+  font-size: 22px;
+  padding: 4px 4px 4px 4px;
+  background-color: cornflowerblue;
+  color: white;
+  margin-right: 8px;
+}
 
 .white_colored {
   background: white;
 }
 
-@media only screen and (max-width: 965px) {
+@media only screen and (max-width: 1100px) {
   .grid-menu {
     -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     -ms-grid-columns: 40% 2em 40%;
     grid-template-columns: repeat(2, 40%);
     grid-auto-rows: 150px;
     grid-column-gap: 2em;
     grid-row-gap: 1em;
   }
+
+  .fields input {
+    display: block;
+  }
+  .fields .last {
+    margin-bottom: 3em;
+  }
 }
-@media only screen and (max-width: 560px) {
+@media only screen and (max-width: 720px) {
   .grid-menu {
     -webkit-box-pack: center;
-    -ms-flex-pack: center;
-    justify-content: center;
+        -ms-flex-pack: center;
+            justify-content: center;
     -ms-grid-columns: 90%;
     grid-template-columns: repeat(1, 90%);
     grid-auto-rows: 150px;

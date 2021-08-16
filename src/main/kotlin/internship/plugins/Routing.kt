@@ -76,19 +76,31 @@ val jsonsRootFile = File("resources/jsons").also {
 
 fun Application.configureRouting() {
     routing {
-        intercept(ApplicationCallPipeline.Setup){
-            if (call.request.path() == "/admin"){
-                println("intercept admin path")
-                val admin = call.sessions.get<AdminSession>()
-                println(admin.toString())
-                if (admin == null || !checkAdminLogin(User(admin.login, admin.psw))) {
-                    println("go to login again")
-                    call.respondRedirect("/login", permanent = false)
-                    //return@intercept finish()
-                } else{
-                    println("intercept admin success")
+        intercept(ApplicationCallPipeline.Setup) {
+            when (call.request.path()) {
+                "/admin" -> {
+                    println("intercept admin path")
+                    val admin = call.sessions.get<AdminSession>()
+                    println(admin.toString())
+                    if (admin == null || !checkAdminLogin(User(admin.login, admin.psw))) {
+                        println("go to login again")
+                        call.respondRedirect("/login", permanent = true)
+                        //return@intercept finish()
+                    } else {
+                        println("intercept admin success")
+                    }
                 }
+                "/" -> {
+                    println("intercept / path")
+                    val user = call.sessions.get<UserSession>()
+                    if (user == null) {
+                        println("intercept: no user -> redirect to login page")
+                        call.respondRedirect("http://10.90.138.10/otrs/userpage.pl", permanent = true)
+                    } else println("intercept: continue with / path")
+                }
+
             }
+
         }
         static("/") {
             resources("templates")
@@ -101,7 +113,7 @@ fun Application.configureRouting() {
             resources("static")
         }
 
-        get("/redir"){
+        get("/redir") {
             println("redir")
             call.respondRedirect("/admin", permanent = false)
         }
@@ -161,7 +173,7 @@ fun Application.configureRouting() {
                                 extension = part.contentType.toString(),
                                 data = Base64.getEncoder().encodeToString(part.streamProvider().readBytes())
                             )
-                           // println("${part.name} ${filedata.extension}")
+                            // println("${part.name} ${filedata.extension}")
                             requestData.files?.add(filedata)
                         }
                     }
@@ -177,16 +189,25 @@ fun Application.configureRouting() {
                 println("additionalFIles $addittionFields")
                 val ticketResp = formTicketCreate(
                     Ticket(
-                        title = StringEscapeUtils.escapeXml10(requestData.fieldsValue?.find { it?.type.equals("Topic") || it?.type.equals("Тема") }?.value)
+                        title = StringEscapeUtils.escapeXml10(requestData.fieldsValue?.find {
+                            it?.type.equals("Topic") || it?.type.equals(
+                                "Тема"
+                            )
+                        }?.value)
                             ?: "npe",
                         customerUser = userSession!!.customerUser,
                         article = Article(
                             subject = StringEscapeUtils.escapeXml10(requestData.widgetName!!),
-                            body = StringEscapeUtils.escapeXml10(requestData.fieldsValue?.find { it?.type.equals("Issue") || it?.type.equals("Проблема") }?.value)  +
-                                    StringEscapeUtils.escapeXml10(if (!addittionFields.isNullOrEmpty()) {
-                                        "\n" + addittionFields.joinToString() + "\n" + requestData.faq_addon
-                                    }
-                                    else "\n" + requestData.faq_addon),
+                            body = StringEscapeUtils.escapeXml10(requestData.fieldsValue?.find {
+                                it?.type.equals("Issue") || it?.type.equals(
+                                    "Проблема"
+                                )
+                            }?.value) +
+                                    StringEscapeUtils.escapeXml10(
+                                        if (!addittionFields.isNullOrEmpty()) {
+                                            "\n" + addittionFields.joinToString() + "\n" + requestData.faq_addon
+                                        } else "\n" + requestData.faq_addon
+                                    ),
                             attachments = requestData.files
                         ),
                     ),
@@ -199,7 +220,7 @@ fun Application.configureRouting() {
                 val json = call.receive<String>()
                 println("create ses: $json")
                 val user = Gson().fromJson(json, User::class.java)
-                if (checkAdminLogin(user)){
+                if (checkAdminLogin(user)) {
                     println("login success")
                     call.sessions.set(AdminSession(user.user, user.password))
                     call.respond(SessionResponse())
@@ -229,19 +250,43 @@ fun Application.configureRouting() {
                 }
                 println("sessionId ${createSession.sessionID} $login")
                 println("sessionId $interfaceSessionId $login")
+                // when running in remote
                 call.respondRedirect("http://10.90.138.10:81/", true)
+                // for local test
+                //call.respondRedirect("/", true)
             }
 
-            get("logout") {
-                call.sessions.clear<UserSession>()
+            get("logout/{who}") {
+                when (call.parameters["who"]) {
+                    "user" -> {
+                        with(call.sessions.get<UserSession>()) {
+                            if (this != null) {
+                                //withContext(Dispatchers.IO){
+                                logoutOtrs(this@with)
+                                //}
+                                call.sessions.clear<UserSession>()
+                                call.respondText("{\"logout\": \"user\" }")
+                                //call.respondRedirect("http://10.90.138.10/otrs/userpage.pl", permanent = true)
+                            }
+                        }
+                    }
+                    "admin" -> {
+                        call.sessions.clear<AdminSession>()
+                        call.respondText("{\"logout\": \"admin\" }")
+                        //call.respondRedirect("/login", permanent = true)
+                    }
+                }
+
+
+                /*call.sessions.clear<UserSession>()
                 call.sessions.clear<AdminSession>()
                 println("logout " + call.sessions.get<UserSession>().toString())
                 println("logout " + call.sessions.get<AdminSession>().toString())
                 //call.respondRedirect("http://10.90.138.10:81/", true)
-                call.respondRedirect("/", true)
+                call.respondRedirect("/", true)*/
             }
 
-            get("admin_name"){
+            get("admin_name") {
                 println("get admin")
                 val adminSession = call.sessions.get<AdminSession>()
                 call.respondText("{\"login\": \"${adminSession?.login}\"}")

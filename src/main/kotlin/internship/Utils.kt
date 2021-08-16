@@ -23,6 +23,29 @@ fun checkAdminLogin(user: User): Boolean{
     return user.user == admin.login && user.password == admin.password
 }
 
+fun logoutOtrs(session: UserSession){
+    println("logoutOtrs cookie ${session.interfaceSession}")
+    val doc = Jsoup
+        .connect("http://10.90.138.10/otrs/userpage.pl?Action=Logout")
+        .method(Connection.Method.GET)
+        .data("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
+        .data("Accept-Encoding","gzip, deflate")
+        .data("Accept-Language", "en-GB,en;q=0.9")
+        //.data("Access-Control-Allow-Origin", "*")
+        .data("Connection", "keep-alive")
+        .data("Upgrade-Insecure-Requests", "1")
+        //.data("Cookie", "OTRSBrowserHasCookie=1;OTRSCustomerInterface=${session.interfaceSession}")
+        .cookie("OTRSCustomerInterface", session.interfaceSession)
+        .followRedirects(true)
+        .execute()
+
+    doc.headers().forEach { (t, u) ->
+        println("$t --- $u")
+    }
+    println("logoutOtrs ${doc.parse().select("div.Login.ARIARoleMain").html()}")
+    println("logoutOtrs ${doc.statusMessage()}")
+}
+
 fun getTicketsByIds(session: UserSession, ids: List<String>): List<TicketResponse> {
     val str1 = "<?xml version='1.0' encoding='UTF-8'?>" +
             "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" " +

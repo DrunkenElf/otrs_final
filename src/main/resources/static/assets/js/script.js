@@ -185,8 +185,16 @@ let widgets = new Vue({
             this.tickets = {};
             this.openTickets = {};
             this.closedTickets = {};
-            axios.get("/logout").then((response) => {
-                window.location.reload();
+            axios.get("/logout/user").then((response) => {
+                //window.location.reload();
+                let temp = response.data.logout
+                console.log(temp)
+                if (temp === "user"){
+                    window.location.replace('http://10.90.138.10/otrs/userpage.pl')
+                } else {
+                    window.location.replace('http://10.90.138.10:81/login')
+                }
+
             })
         },
         onFileSelected(event) {

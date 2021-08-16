@@ -417,9 +417,14 @@ let widgets = new Vue({
         logOut() {
             this.user = {};
             this.admininfo = "";
-            axios.get('/logout').then((response) => {
-                console.log(response);
-                //window.location.reload();
+            axios.get('/logout/admin').then((response) => {
+                let temp = response.data.logout
+                console.log(temp)
+                if (temp === "user"){
+                    window.location.href = "http://10.90.138.10/otrs/userpage.pl"
+                } else {
+                    window.location.href = "http://10.90.138.10:81/login"
+                }
             })
         },
         onFileSelected(event) {
