@@ -64,7 +64,7 @@
                 <a v-if="language === 0" v-on:click="setDisplay(widget.id)" class="grid-widget-link">Report Issue</a>
                 <a v-else v-on:click="setDisplay(widget.id)" class="grid-widget-link">Сообщить о проблеме</a>
             </div>
-            <div v-if="Object.keys(user).length !== 0" class="grid-element-new border">
+            <div v-if="admininfo.length >= 1" class="grid-element-new border">
                 <img src="/static/assets/img/plus.png" alt="plus" width="100">
                 <div>
                     <a v-if="language === 0" v-on:click="setDisplay(404)"><h4>Add new category</h4></a>

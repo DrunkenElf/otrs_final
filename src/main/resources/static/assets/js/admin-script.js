@@ -434,10 +434,14 @@ let widgets = new Vue({
         }
     },
     created: function () {
+        axios.get('/admin_name').then((response) => {
+            console.log(response);
+            this.admininfo = response.data.login;
+        })
         axios.get('/json').then((response) =>{
             this.widgetsEN = response.data.widgets;
             this.session = response.data.session;
-            this.widgets = this.widgetsEN;
+            this.widgets = this.widgetsEN.sort((a,b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0));
         });
         axios.get('/json_ru').then((response) =>{
             this.widgetsRU = response.data.widgets;
@@ -449,9 +453,5 @@ let widgets = new Vue({
             this.openTickets = this.getOpenTickets();
             this.closedTickets = this.getClosedTickets();
         });
-        axios.get('/admin_name').then((response) => {
-            console.log(response);
-            this.admininfo = response.data.login;
-        })
     }
 })
