@@ -1,5 +1,0 @@
-Manifest-Version: 1.0
-Implementation-Title: Ktor - Vue Fat Jar
-Implementation-Version: unspecified
-Main-Class: io.ktor.server.netty.EngineMain
-
