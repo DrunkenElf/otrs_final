@@ -32,7 +32,7 @@ let widgets = new Vue({
                 } else {
                     console.log("success");
                     //window.location.href = '/admin'
-                    window.location.replace('http://10.90.138.10:81/admin')
+                    window.location.replace('/admin')
                     //this.redir()
                 }
                 this.requestResp = response;

@@ -78,18 +78,25 @@ fun Application.configureRouting() {
     routing {
         intercept(ApplicationCallPipeline.Setup) {
             val path = call.request.path()
-            println("intercept: path:$path")
+            call.application.environment.log.info("intercept: path:$path")
             when (call.request.path()) {
                 "/admin" -> {
                     val admin = call.sessions.get<AdminSession>()
                     println(admin.toString())
-                    if (admin == null || !checkAdminLogin(User(admin.login, admin.psw))) {
-                        println("go to login again")
-                        call.respondRedirect("/login", permanent = true)
-                        //return@intercept finish()
+                    if (admin != null){
+                        if (checkAdminLogin(User(admin.login, admin.psw))){
+                            call.application.environment.log.info("intercept admin success")
+                        } else {
+                            call.application.environment.log.info("go to login again; inner")
+                            call.respondRedirect("/login", permanent = false)
+                            return@intercept finish()
+                        }
                     } else {
-                        println("intercept admin success")
+                        call.application.environment.log.info("go to login again; outer")
+                        call.respondRedirect("/login", permanent = false)
+                        return@intercept finish()
                     }
+
                 }
                 "/" -> {
                     val user = call.sessions.get<UserSession>()
