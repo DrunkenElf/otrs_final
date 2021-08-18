@@ -59,7 +59,7 @@
                 <div class="main-header_links">
                     <a v-if="language === 0" @click="setMainMenu(0)" id="link0">New Ticket</a>
                     <a v-else @click="setMainMenu(0)" id="link0">Новый тикет</a>
-                    <a v-if="language === 0" @click="setMainMenu(1)" id="link1">Open Tickets</a>
+                    <a v-if="language === 0" @click="setMainMenu(1)" id="link1">Opened Tickets</a>
                     <a v-else @click="setMainMenu(1)" id="link1">Открытые тикеты</a>
                     <a v-if="language === 0" @click="setMainMenu(2)" id="link2">Resolved Tickets</a>
                     <a v-else @click="setMainMenu(2)" id="link2">Решенные тикеты</a>
@@ -133,7 +133,7 @@
 
                 <div class="ticket_number">
                     <span v-if="language === 0">Number of tickets:</span>
-                    <span v-else>Количетсво тикетов:</span>
+                    <span v-else>Количество тикетов:</span>
                     <a @click="setTicketNumber(10)">10</a>
                     <a @click="setTicketNumber(20)">20</a>
                     <a @click="setTicketNumber(50)">50</a>
