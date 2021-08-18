@@ -190,7 +190,7 @@ let widgets = new Vue({
                 let temp = response.data.logout
                 console.log(temp)
                 if (temp === "user"){
-                    window.location.replace('http://10.90.138.10/otrs/userpage.pl')
+                    window.location.replace('http://10.90.138.10/otrs/userpage.pl?Action=Logout')
                 } else {
                     window.location.replace('http://10.90.138.10:81/login')
                 }

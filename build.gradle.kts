@@ -81,7 +81,8 @@ tasks.processResources {
     filesMatching("*.conf") {
         expand(
             "KTOR_ENV" to "production",
-            "KTOR_PORT" to "80",
+            //"KTOR_ENV" to "dev",
+            "KTOR_PORT" to "81",
             "KTOR_MODULE" to "",
             "KTOR_AUTORELOAD" to "false"
         )

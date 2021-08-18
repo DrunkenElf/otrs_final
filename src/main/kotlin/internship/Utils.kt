@@ -7,11 +7,32 @@ import org.jsoup.Jsoup
 import org.jsoup.parser.Parser
 import java.io.File
 import java.io.InputStream
+import io.ktor.application.*
 
+enum class OtrsInterfaceState{
+    VALID,
+    EXPIRED
+}
 
 fun File.copyInputStreamToFile(inputstream: InputStream) {
     this.outputStream().use { fileOut ->
         inputstream.copyTo(fileOut)
+    }
+}
+
+suspend fun checkUserOtrs(session: UserSession): OtrsInterfaceState{
+    println("checkUserOtrs started")
+    val resp = Jsoup.connect("http://10.90.138.10/otrs/customer.pl")
+        .cookie("OTRSCustomerInterface", session.interfaceSession)
+        .method(Connection.Method.GET)
+        .execute()
+    println("checkUserOtrs finished")
+    println("checkUserOtrs ${resp.statusMessage()} ${resp.statusCode()}")
+    println("checkUserOtrs ${resp.body()}")
+    with(resp.parse()){
+        if (this.selectFirst("div.ErrorBox")?.text() != null){
+            return OtrsInterfaceState.EXPIRED
+        } else return OtrsInterfaceState.VALID
     }
 }
 
@@ -22,6 +43,7 @@ fun checkAdminLogin(user: User): Boolean{
     println("check admin: \nadmin: ${admin.login} ${admin.password}\n user: ${user.user} ${user.password}")
     return user.user == admin.login && user.password == admin.password
 }
+
 
 fun logoutOtrs(session: UserSession){
     println("logoutOtrs cookie ${session.interfaceSession}")
@@ -42,7 +64,7 @@ fun logoutOtrs(session: UserSession){
     doc.headers().forEach { (t, u) ->
         println("$t --- $u")
     }
-    println("logoutOtrs ${doc.parse().select("div.Login.ARIARoleMain").html()}")
+    println("logoutOtrs ${doc.parse().selectFirst("div.Login.ARIARoleMain")?.html()}")
     println("logoutOtrs ${doc.statusMessage()}")
 }
 
@@ -120,6 +142,7 @@ fun getTicketsByIds(session: UserSession, ids: List<String>): List<TicketRespons
             typeId = ticket.selectFirst("TypeID")?.text()
         )
     }
+
     return tickets
 }
 
@@ -199,6 +222,7 @@ fun getTicket(session: UserSession, id: String): TicketResponse {
 }
 
 fun getTicketIds(session: UserSession): List<String> {
+
     val str = "<?xml version='1.0' encoding='UTF-8'?>" +
             "<soapenv:Envelope xmlns:soapenv=\"http://schemas.xmlsoap.org/soap/envelope/\" " +
             "xmlns:tic=\"http://www.otrs.org/TicketConnector/\">" +
@@ -217,12 +241,14 @@ fun getTicketIds(session: UserSession): List<String> {
         .data("ContentType", "text/xml; charset=\"utf-8\"")
         .data("Accept", "text/xml")
         .requestBody(str)
+        .timeout(20000)
         .execute()
 
     val els = Jsoup.parse(doc.body(), "", Parser.xmlParser())
     val ids = els.select("TicketID")
 
     val list = ids.map { it.text() }
+
     return list
 }
 

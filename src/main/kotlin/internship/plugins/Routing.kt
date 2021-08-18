@@ -24,14 +24,14 @@ import kotlin.collections.ArrayList
 val jsonsRootFile = File("resources/jsons").also {
     if (!it.exists()) it.mkdirs()
     val adminFile = File(it, "admin.json").also { child ->
-        if (!child.exists()){
+        if (!child.exists()) {
             child.createNewFile()
             val writer = child.bufferedWriter()
             val prefs = Application::class.java.classLoader.getResourceAsStream("jsons/admin.json")
                 ?.bufferedReader().use { res -> res?.readText() }
 
             println("admin.json $prefs")
-            writer.write(""+prefs)
+            writer.write("" + prefs)
             writer.flush()
             writer.close()
         }
@@ -77,9 +77,10 @@ val jsonsRootFile = File("resources/jsons").also {
 fun Application.configureRouting() {
     routing {
         intercept(ApplicationCallPipeline.Setup) {
+            val path = call.request.path()
+            println("intercept: path:$path")
             when (call.request.path()) {
                 "/admin" -> {
-                    println("intercept admin path")
                     val admin = call.sessions.get<AdminSession>()
                     println(admin.toString())
                     if (admin == null || !checkAdminLogin(User(admin.login, admin.psw))) {
@@ -91,12 +92,25 @@ fun Application.configureRouting() {
                     }
                 }
                 "/" -> {
-                    println("intercept / path")
                     val user = call.sessions.get<UserSession>()
                     if (user == null) {
                         println("intercept: no user -> redirect to login page")
-                        call.respondRedirect("http://10.90.138.10/otrs/userpage.pl", permanent = true)
-                    } else println("intercept: continue with / path")
+                        call.sessions.clear<UserSession>()
+                        call.respondRedirect("http://10.90.138.10/otrs/userpage.pl?Action=Logout", permanent = true)
+                        return@intercept finish()
+                    } else {
+                        println("intercept session: sessCust:${user.interfaceSession};userL:${user.customerUser}")
+                        /* when(checkUserOtrs(user)){
+                             OtrsInterfaceState.EXPIRED -> {
+                                 call.sessions.clear<UserSession>()
+                                 println("intercept: otrs session expired -> redirect to login page")
+                                 call.respondRedirect("http://10.90.138.10/otrs/userpage.pl", permanent = true)
+                             }
+                             OtrsInterfaceState.VALID -> {
+                                 println("intercept: continue with / path")
+                             }
+                         }*/
+                    }
                 }
 
             }
@@ -148,8 +162,17 @@ fun Application.configureRouting() {
             get("user") {
                 val userSession = call.sessions.get<UserSession>()
                 println("usersesion: ${userSession?.sessionId} ${userSession?.customerUser}")
+                call.application.environment.log.info("ticketSearch start")
                 val ids = getTicketIds(userSession!!)
-                val tickets = getTicketsByIds(userSession, ids)
+                call.application.environment.log.info("ticketSearch finish")
+                call.application.environment.log.info("ticketsgetById start")
+                var tickets: List<TicketResponse> = try {
+                    getTicketsByIds(userSession, ids)
+                } catch (e: Exception) {
+                    call.application.environment.log.info(e.message)
+                    getTicketsByIds(userSession, ids)
+                }
+                call.application.environment.log.info("ticketsgetById finish")
                 call.respond(tickets)
             }
 
@@ -173,7 +196,6 @@ fun Application.configureRouting() {
                                 extension = part.contentType.toString(),
                                 data = Base64.getEncoder().encodeToString(part.streamProvider().readBytes())
                             )
-                            // println("${part.name} ${filedata.extension}")
                             requestData.files?.add(filedata)
                         }
                     }
@@ -227,29 +249,21 @@ fun Application.configureRouting() {
                 } else {
                     call.respond(SessionResponse(isOk = false))
                 }
-
-                /*val user = Gson().fromJson(json, User::class.java)
-                //val user = call.receiveParameters()
-                val createSession = sessionCreate(user.user, user.password)
-                // добавить аутентификацию через jsoup
-                if (createSession.isOk)
-                    call.sessions.set(UserSession(user.user, createSession.sessionID!!, ""))
-                call.respond(createSession)*/
-
             }
 
             get("cookies/{interfaceSessionId}/{password}/{user}") {
-                println(call.parameters.toString())
                 val interfaceSessionId = call.parameters["interfaceSessionId"]
                 val password = call.parameters["password"]
                 val login = call.parameters["user"]
 
+                call.application.environment.log.info("session create start")
                 val createSession = sessionCreate(login!!, password!!)
+                call.application.environment.log.info("session create finish")
                 if (createSession.isOk) {
                     call.sessions.set(UserSession(login, createSession.sessionID!!, interfaceSessionId!!))
                 }
                 println("sessionId ${createSession.sessionID} $login")
-                println("sessionId $interfaceSessionId $login")
+                println("interfaceSessionId $interfaceSessionId $login")
                 // when running in remote
                 call.respondRedirect("http://10.90.138.10:81/", true)
                 // for local test
@@ -261,29 +275,19 @@ fun Application.configureRouting() {
                     "user" -> {
                         with(call.sessions.get<UserSession>()) {
                             if (this != null) {
-                                //withContext(Dispatchers.IO){
+                                /*call.application.environment.log.info("logout start")
                                 logoutOtrs(this@with)
-                                //}
+                                call.application.environment.log.info("logout finish")*/
                                 call.sessions.clear<UserSession>()
                                 call.respondText("{\"logout\": \"user\" }")
-                                //call.respondRedirect("http://10.90.138.10/otrs/userpage.pl", permanent = true)
                             }
                         }
                     }
                     "admin" -> {
                         call.sessions.clear<AdminSession>()
                         call.respondText("{\"logout\": \"admin\" }")
-                        //call.respondRedirect("/login", permanent = true)
                     }
                 }
-
-
-                /*call.sessions.clear<UserSession>()
-                call.sessions.clear<AdminSession>()
-                println("logout " + call.sessions.get<UserSession>().toString())
-                println("logout " + call.sessions.get<AdminSession>().toString())
-                //call.respondRedirect("http://10.90.138.10:81/", true)
-                call.respondRedirect("/", true)*/
             }
 
             get("admin_name") {
