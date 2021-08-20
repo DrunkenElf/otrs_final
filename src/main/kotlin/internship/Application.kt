@@ -1,13 +1,10 @@
 package internship
 
-import io.ktor.server.engine.*
-import io.ktor.server.netty.*
 import internship.plugins.*
 import io.ktor.application.*
 import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.http.content.*
-import java.io.File
 
 /*fun main() {
     embeddedServer(Netty, port = 8080, host = "") {

@@ -4,7 +4,6 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import internship.*
 import io.ktor.application.*
-import io.ktor.http.*
 import io.ktor.http.content.*
 import io.ktor.request.*
 import io.ktor.response.*
@@ -14,12 +13,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import org.apache.commons.text.StringEscapeUtils
 import java.io.File
-import java.io.FileOutputStream
 import java.io.FileWriter
-import java.time.Duration
 import java.util.*
 import kotlin.collections.ArrayList
 
+val address = "http://10.90.138.10"
 
 val jsonsRootFile = File("resources/jsons").also {
     if (!it.exists()) it.mkdirs()
@@ -103,7 +101,7 @@ fun Application.configureRouting() {
                     if (user == null) {
                         println("intercept: no user -> redirect to login page")
                         call.sessions.clear<UserSession>()
-                        call.respondRedirect("http://10.90.138.10/otrs/userpage.pl?Action=Logout", permanent = true)
+                        call.respondRedirect("$address/otrs/userpage.pl?Action=Logout", permanent = true)
                         return@intercept finish()
                     } else {
                         println("intercept session: sessCust:${user.interfaceSession};userL:${user.customerUser}")
@@ -272,7 +270,7 @@ fun Application.configureRouting() {
                 println("sessionId ${createSession.sessionID} $login")
                 println("interfaceSessionId $interfaceSessionId $login")
                 // when running in remote
-                call.respondRedirect("http://10.90.138.10:81/", true)
+                call.respondRedirect("$address/", true)
                 // for local test
                 //call.respondRedirect("/", true)
             }

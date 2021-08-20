@@ -2,6 +2,7 @@ package internship
 
 import com.google.gson.Gson
 import internship.plugins.UserSession
+import internship.plugins.address
 import org.jsoup.Connection
 import org.jsoup.Jsoup
 import org.jsoup.parser.Parser
@@ -22,7 +23,7 @@ fun File.copyInputStreamToFile(inputstream: InputStream) {
 
 suspend fun checkUserOtrs(session: UserSession): OtrsInterfaceState{
     println("checkUserOtrs started")
-    val resp = Jsoup.connect("http://10.90.138.10/otrs/customer.pl")
+    val resp = Jsoup.connect("$address/otrs/customer.pl")
         .cookie("OTRSCustomerInterface", session.interfaceSession)
         .method(Connection.Method.GET)
         .execute()
@@ -48,7 +49,7 @@ fun checkAdminLogin(user: User): Boolean{
 fun logoutOtrs(session: UserSession){
     println("logoutOtrs cookie ${session.interfaceSession}")
     val doc = Jsoup
-        .connect("http://10.90.138.10/otrs/userpage.pl?Action=Logout")
+        .connect("$address/otrs/userpage.pl?Action=Logout")
         .method(Connection.Method.GET)
         .data("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9")
         .data("Accept-Encoding","gzip, deflate")
@@ -84,7 +85,7 @@ fun getTicketsByIds(session: UserSession, ids: List<String>): List<TicketRespons
             "</soapenv:Envelope>"
 
     val doc = Jsoup
-        .connect("http://10.90.138.10/otrs/nph-genericinterface.pl/Webservice/webservice_soap")
+        .connect("$address/otrs/nph-genericinterface.pl/Webservice/webservice_soap")
         .method(Connection.Method.POST)
         .header("SOAPAction", "http://www.otrs.org/TicketConnector/TicketGet")
         .data("ContentType", "text/xml; charset=\"utf-8\"")
@@ -162,7 +163,7 @@ fun getTicket(session: UserSession, id: String): TicketResponse {
             "</soapenv:Envelope>"
 
     val req = Jsoup
-        .connect("http://10.90.138.10/otrs/nph-genericinterface.pl/Webservice/webservice_soap")
+        .connect("$address/otrs/nph-genericinterface.pl/Webservice/webservice_soap")
         .method(Connection.Method.POST)
         .header("SOAPAction", "http://www.otrs.org/TicketConnector/TicketGet")
         .data("ContentType", "text/xml; charset=\"utf-8\"")
@@ -235,7 +236,7 @@ fun getTicketIds(session: UserSession): List<String> {
             "</soapenv:Envelope>"
 
     val doc = Jsoup
-        .connect("http://10.90.138.10/otrs/nph-genericinterface.pl/Webservice/webservice_soap")
+        .connect("$address/otrs/nph-genericinterface.pl/Webservice/webservice_soap")
         .method(Connection.Method.POST)
         .header("SOAPAction", "http://www.otrs.org/TicketConnector/TicketSearch")
         .data("ContentType", "text/xml; charset=\"utf-8\"")
@@ -298,7 +299,7 @@ fun formTicketCreate(ticket: Ticket, sessionId: String): CreatedTicketResp {
     var doc: Connection.Response? = null
     try {
         doc = Jsoup
-            .connect("http://10.90.138.10/otrs/nph-genericinterface.pl/Webservice/webservice_soap")
+            .connect("$address/otrs/nph-genericinterface.pl/Webservice/webservice_soap")
             .method(Connection.Method.POST)
             .header("SOAPAction", "http://www.otrs.org/TicketConnector/TicketCreate")
             .data("ContentType", "text/xml; charset=\"utf-8\"")
@@ -333,7 +334,7 @@ fun sessionCreate(username: String, password: String): SessionResponse {
             "   </soapenv:Body>\n" +
             "</soapenv:Envelope>"
     val resp = Jsoup
-        .connect("http://10.90.138.10/otrs/nph-genericinterface.pl/Webservice/webservice_soap")
+        .connect("$address/otrs/nph-genericinterface.pl/Webservice/webservice_soap")
         .method(Connection.Method.POST)
         .header("SOAPAction", "http://www.otrs.org/TicketConnector/SessionCreate")
         .data("ContentType", "text/xml; charset=\"utf-8\"")
