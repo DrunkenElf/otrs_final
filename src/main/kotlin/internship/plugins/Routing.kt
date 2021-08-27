@@ -17,60 +17,72 @@ import java.io.FileWriter
 import java.util.*
 import kotlin.collections.ArrayList
 
-val address = "http://10.90.138.10"
+const val address = "http://10.90.138.10"
 
-val jsonsRootFile = File("resources/jsons").also {
-    if (!it.exists()) it.mkdirs()
-    val adminFile = File(it, "admin.json").also { child ->
+fun writeFile(file: File, srcPath: String){
+    val writer = file.bufferedWriter()
+    val prefs = Application::class.java.classLoader.getResourceAsStream(srcPath)
+        ?.bufferedReader().use { res -> res?.readText() }
+
+    println("$srcPath $prefs")
+    writer.write("" + prefs)
+    writer.flush()
+    writer.close()
+}
+
+val shouldRewriteFiles = File("resources/version.txt").also { child ->
         if (!child.exists()) {
             child.createNewFile()
             val writer = child.bufferedWriter()
-            val prefs = Application::class.java.classLoader.getResourceAsStream("jsons/admin.json")
-                ?.bufferedReader().use { res -> res?.readText() }
-
-            println("admin.json $prefs")
-            writer.write("" + prefs)
+            val cl = Application::class.java.`package`.implementationVersion
+            println("created jar version")
+            writer.write(cl)
             writer.flush()
             writer.close()
+            writeFiles()
+        } else {
+            val version = File("resources/version.txt").readText().toInt()
+            val newVersion = Application::class.java.`package`.implementationVersion.toInt()
+            if (newVersion > version){
+                val writer = child.bufferedWriter()
+                writer.write(newVersion.toString())
+                writer.flush()
+                writer.close()
+                writeFiles()
+            }
         }
     }
-    val widgets = File(it, "widgets.json").also { child ->
-        child.createNewFile()
-        val writer = child.bufferedWriter()
-        val json = Application::class.java.classLoader.getResourceAsStream("jsons/widgets.json")
-            ?.bufferedReader().use { res -> res?.readText() }
-        writer.write("" + json)
-        writer.flush()
-        writer.close()
-    }
-    val widgetsRU = File(it, "widgetsRU.json").also { child ->
-        child.createNewFile()
-        val writer = child.bufferedWriter()
-        val json = Application::class.java.classLoader.getResourceAsStream("jsons/widgetsRU.json")
-            ?.bufferedReader().use { res -> res?.readText() }
-        writer.write("" + json)
-        writer.flush()
-        writer.close()
-    }
-    val list = File(it, "list.json").also { child ->
-        child.createNewFile()
-        val writer = child.bufferedWriter()
-        val json = Application::class.java.classLoader.getResourceAsStream("jsons/list.json")
-            ?.bufferedReader().use { res -> res?.readText() }
-        writer.write(json)
-        writer.flush()
-        writer.close()
-    }
-    val listRU = File(it, "list-ru.json").also { child ->
-        child.createNewFile()
-        val writer = child.bufferedWriter()
-        val json = Application::class.java.classLoader.getResourceAsStream("jsons/list-ru.json")
-            ?.bufferedReader().use { res -> res?.readText() }
-        writer.write(json)
-        writer.flush()
-        writer.close()
+
+
+
+fun writeFiles(){
+    File("resources/jsons").also {
+        if (!it.exists()) it.mkdirs()
+        File(it, "admin.json").also { child ->
+            if (!child.exists()) {
+                child.createNewFile()
+                writeFile(child, "jsons/admin.json")
+            }
+        }
+        File(it, "widgets.json").also { child ->
+            child.createNewFile()
+            writeFile(child, "jsons/widgets.json")
+        }
+        File(it, "widgetsRU.json").also { child ->
+            child.createNewFile()
+            writeFile(child, "jsons/widgetsRU.json")
+        }
+        File(it, "list.json").also { child ->
+            child.createNewFile()
+            writeFile(child, "jsons/list.json")
+        }
+        File(it, "list-ru.json").also { child ->
+            child.createNewFile()
+            writeFile(child, "jsons/list-ru.json")
+        }
     }
 }
+
 
 fun Application.configureRouting() {
     routing {
@@ -270,7 +282,7 @@ fun Application.configureRouting() {
                 println("sessionId ${createSession.sessionID} $login")
                 println("interfaceSessionId $interfaceSessionId $login")
                 // when running in remote
-                call.respondRedirect("$address/", true)
+                call.respondRedirect("$address:81/", true)
                 // for local test
                 //call.respondRedirect("/", true)
             }
