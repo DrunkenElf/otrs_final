@@ -9,22 +9,24 @@ plugins {
     application
     id("java-library")
     id("java")
-    kotlin("jvm") version "1.5.21"
+    kotlin("jvm") version "1.5.30"
 }
 
 group "internship"
 version "0.0.1"
+project.version = version
 
 
 application {
-    mainClassName = "io.ktor.server.netty.EngineMain"
-
+    //mainClassName = "io.ktor.server.netty.EngineMain"
+    mainClass.set("io.ktor.server.netty.EngineMain")
     //applicationDefaultJvmArgs = listOf("-Dio.ktor.development=true")
 }
 
 repositories {
     mavenLocal()
     jcenter()
+    mavenCentral()
     maven { url = uri("https://kotlin.bintray.com/ktor") }
 }
 
@@ -55,9 +57,10 @@ sourceSets["main"].resources.srcDirs("resources")
 
 
 val fatJar = task("fatJar", type = Jar::class) {
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
     manifest {
         attributes["Implementation-Title"] = "Ktor - Vue Fat Jar"
-        attributes["Implementation-Version"] = project.version
+        attributes["Implementation-Version"] = "1"
         attributes["Main-Class"] = "io.ktor.server.netty.EngineMain"
     }
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })
@@ -126,6 +129,7 @@ tasks {
         }
     }
     "fatJar" {
+
         //dependsOn(copyDistFolder)
     }
     "copyDistFolder" {
