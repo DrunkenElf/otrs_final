@@ -74,6 +74,7 @@ let widgets = new Vue({
         },
         editData: {
             id: "",
+            oldID: "",
             name: "",
             description: "",
             fields: [],
@@ -81,6 +82,7 @@ let widgets = new Vue({
         },
         editDataRU: {
             id: "",
+            oldID: "",
             name: "",
             description: "",
             fields: [],
@@ -115,6 +117,7 @@ let widgets = new Vue({
             this.edit = true;
             this.editData.id = id;
             this.editData.name = this.widgetsEN[id - 1].name;
+            this.editData.oldID = id;
             this.editData.description = this.widgetsEN[id - 1].description;
             this.editData.icon = this.widgetsEN[id - 1].icon;
             for (let i = 0; i < this.widgetsEN[id - 1].fields.length; i++) {
@@ -204,11 +207,11 @@ let widgets = new Vue({
         },
         changeLanguage() {
             if (this.language === 0) {
-                this.widgets = this.widgetsRU;
+                this.widgets = this.widgetsRU.sort((a,b) => (a.order > b.order) ? 1 : ((b.order > a.order) ? -1 : 0));
                 this.language = 1;
                 this.lng_image = "/static/assets/img/toggle-right.png"
             }else {
-                this.widgets = this.widgetsEN;
+                this.widgets = this.widgetsEN.sort((a,b) => (a.order > b.order) ? 1 : ((b.order > a.order) ? -1 : 0));
                 this.language = 0;
                 this.lng_image = "/static/assets/img/toggle-left.png"
             }
@@ -270,12 +273,14 @@ let widgets = new Vue({
             this.widgetsRU.push({...this.newCategoryRU});
             this.updateJSON();
             this.newCategory.id = "";
+            this.newCategory.order = "";
             this.newCategory.name = "";
             this.newCategory.description = "";
             this.newCategory.icon = "";
             this.newCategory.fields = [{"title": "", "type": "input", "placeholder": ""}];
             this.newCategory.faq = [{id: 0, question: "Please enter the question", answers: []}];
             this.newCategoryRU.id = "";
+            this.newCategoryRU.order = "";
             this.newCategoryRU.name = "";
             this.newCategoryRU.description = "";
             this.newCategoryRU.icon = "";
@@ -283,7 +288,9 @@ let widgets = new Vue({
             this.newCategoryRU.faq = [{id: 0, question: "Введите новый вопрос", answers: []}]
         },
         updateCategory() {
-            let index = this.editData.id - 1;
+            let index = this.editData.id;
+            this.widgetsEN.splice(index, 0, {id: this.editData.id - 1, name: "", description: "", icon: "", fields: [], faq: []});
+            this.widgetsRU.splice(index, 0, {id: this.editData.id - 1, name: "", description: "", icon: "", fields: [], faq: []});
             this.widgetsEN[index].name =  this.editData.name;
             this.widgetsEN[index].description = this.editData.description;
             this.widgetsEN[index].icon = this.editData.icon;
@@ -297,6 +304,17 @@ let widgets = new Vue({
             }
             this.widgetsRU[index].fields = [...this.editDataRU.fields];
             this.widgetsRU[index].faq = [...this.editDataRU.faq];
+            if (this.editData.oldID === this.editData.id) {
+                this.widgetsEN.splice(index - 1, 1);
+                this.widgetsRU.splice(index - 1, 1);
+            }else {
+                this.widgetsEN.splice(this.editData.oldID - 1, 1);
+                this.widgetsRU.splice(this.editData.oldID - 1, 1);
+            }
+            for (let i = 0; i < this.widgetsEN.length; i++) {
+                this.widgetsEN[i].id = i + 1;
+                this.widgetsRU[i].id = i + 1;
+            }
             this.updateJSON();
         },
         deleteCategory(id) {
@@ -441,7 +459,7 @@ let widgets = new Vue({
         axios.get('/json').then((response) =>{
             this.widgetsEN = response.data.widgets;
             this.session = response.data.session;
-            this.widgets = this.widgetsEN.sort((a,b) => (a.id > b.id) ? 1 : ((b.id > a.id) ? -1 : 0));
+            this.widgets = this.widgetsEN.sort((a,b) => (a.order > b.order) ? 1 : ((b.order > a.order) ? -1 : 0));
         });
         axios.get('/json_ru').then((response) =>{
             this.widgetsRU = response.data.widgets;

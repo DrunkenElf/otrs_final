@@ -39,6 +39,7 @@
                     </a>
                 </div>
             </div>
+            <hr class="green-hr">
         </header>
 
         <main v-if="main_menu === 0" id="main" class="grid-menu big-margin">
@@ -47,11 +48,11 @@
                     <h4 v-text='widget.id + ". " + widget.name'></h4>
                 </a>
                 <h6 v-text="widget.description" class="grid-description-text"></h6>
-                <a v-if="language === 0" v-on:click="setDisplay(widget.id)" class="grid-widget-link">Report Issue</a>
-                <a v-else v-on:click="setDisplay(widget.id)" class="grid-widget-link">Сообщить о проблеме</a>
             </div>
             <div v-if="admininfo.length >= 1" class="grid-element-new border">
-                <img src="/static/assets/img/plus.png" alt="plus" width="100">
+                <a @click="setDisplay(404)">
+                    <img src="/static/assets/img/plus.png" alt="plus" width="100">
+                </a>
                 <div>
                     <a v-if="language === 0" v-on:click="setDisplay(404)"><h4>Add new category</h4></a>
                     <a v-else v-on:click="setDisplay(404)"><h4>Добавить новую категорию</h4></a>
@@ -59,10 +60,6 @@
             </div>
         </main>
 
-
-        <main v-if="main_menu === 4">
-
-        </main>
     </div>
 
     <!- Request ->
@@ -174,6 +171,10 @@
 
                     <h2 v-if="language === 0" class="big-margin">Fill the form to edit the category</h2>
                     <h2 v-else class="big-margin">Заполните форму для редактирования</h2>
+
+                    <h3>ID</h3>
+                    <input v-if="language === 0" v-model.trim="editData.id" placeholder="Enter the index" class="input border small-margin">
+                    <input v-else v-model.trim="editData.id" placeholder="Введите индекс" class="input border small-margin">
 
                     <h3 v-if="language === 0">Title [en]</h3>
                     <h3 v-else>Заголовок [en]</h3>
@@ -393,6 +394,15 @@
                 <h3 v-if="language === 0">Description [ru]</h3>
                 <h3 v-else>Описание [ru]</h3>
                 <input v-model.trim="newCategoryRU.description" placeholder="Охарактеризируйте категорию"
+                       class="input border small-margin">
+
+                <h3 v-if="language === 0">Order [en]</h3>
+                <h3 v-else>Порядок [en]</h3>
+                <input v-model.trim="newCategory.order" placeholder="Position in list"
+                       class="input border small-margin">
+                <h3 v-if="language === 0">Order [ru]</h3>
+                <h3 v-else>Порядок [ru]</h3>
+                <input v-model.trim="newCategoryRU.order" placeholder="Позиция в списке"
                        class="input border small-margin">
 
                 <hr class="middle-margin">
