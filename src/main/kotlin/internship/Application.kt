@@ -6,15 +6,6 @@ import io.ktor.features.*
 import io.ktor.http.*
 import io.ktor.http.content.*
 
-/*fun main() {
-    embeddedServer(Netty, port = 8080, host = "") {
-        configureRouting()
-        configureMonitoring()
-        configureSerialization()
-        configCORS()
-    }.start(wait = true)
-}*/
-
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 

@@ -93,6 +93,8 @@ fun getTicketsByIds(session: UserSession, ids: List<String>): List<TicketRespons
         .requestBody(str1)
         .execute()
 
+    println("getTicketsIds request size: ${doc.body().length}; in bytes: ${doc.body().toByteArray().size}")
+
     val xmlbody = Jsoup.parse(doc.body(), "", Parser.xmlParser())
 
     val tickets = xmlbody.select("Ticket").map { ticket ->
