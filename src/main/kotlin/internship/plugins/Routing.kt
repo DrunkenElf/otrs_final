@@ -179,17 +179,18 @@ fun Application.configureRouting() {
             get("user") {
                 val userSession = call.sessions.get<UserSession>()
                 println("usersesion: ${userSession?.sessionId} ${userSession?.customerUser}")
-                call.application.environment.log.info("ticketSearch start")
+                call.application.environment.log.warn("ticketSearch start")
                 val ids = getTicketIds(userSession!!)
-                call.application.environment.log.info("ticketSearch finish")
-                call.application.environment.log.info("ticketsgetById start")
+                call.application.environment.log.warn("ticketSearch finish")
+                call.application.environment.log.warn("ticketsgetById start")
                 var tickets: List<TicketResponse> = try {
                     getTicketsByIds(userSession, ids)
                 } catch (e: Exception) {
                     call.application.environment.log.info(e.message)
                     getTicketsByIds(userSession, ids)
                 }
-                call.application.environment.log.info("ticketsgetById finish")
+                //call.application.environment.log.info("size of user data: $tickets.")
+                call.application.environment.log.warn("ticketsgetById finish")
                 call.respond(tickets)
             }
 
@@ -197,12 +198,16 @@ fun Application.configureRouting() {
                 var requestData = RequestData(null, null, ArrayList<Field?>(), ArrayList())
                 val multipart = call.receiveMultipart()
                 val myType = object : TypeToken<ArrayList<Field?>>() {}.type
+                val listStringType = object : TypeToken<ArrayList<String?>>() {}.type
                 multipart.forEachPart { part ->
                     when (part) {
                         is PartData.FormItem -> {
                             when (part.name) {
                                 "widgetName" -> requestData.widgetName = part.value
-                                "faq_addon" -> requestData.faq_addon = part.value
+                                "faq" -> {
+                                    call.application.environment.log.info("FAQ FIELD: ${part.value}")
+                                    requestData.faq = Gson().fromJson<ArrayList<String?>>(part.value, listStringType)
+                                }
                                 "fieldsValue" -> requestData.fieldsValue =
                                     Gson().fromJson<ArrayList<Field?>>(part.value, myType)
                             }
@@ -219,7 +224,7 @@ fun Application.configureRouting() {
                 }
 
                 println("fields values " + requestData.fieldsValue.toString())
-                println("faq addon " + requestData.faq_addon)
+                println("faq addon " + requestData.faq)
                 val userSession = call.sessions.get<UserSession>()
                 val addittionFields = requestData.fieldsValue?.filter {
                     !it?.type.equals("Topic") && !it?.type.equals("Issue") &&
@@ -233,7 +238,7 @@ fun Application.configureRouting() {
                                 "Тема"
                             )
                         }?.value)
-                            ?: "npe",
+                            ?: "npe(No Topic or Тема field)",
                         customerUser = userSession!!.customerUser,
                         article = Article(
                             subject = StringEscapeUtils.escapeXml10(requestData.widgetName!!),
@@ -241,11 +246,11 @@ fun Application.configureRouting() {
                                 it?.type.equals("Issue") || it?.type.equals(
                                     "Проблема"
                                 )
-                            }?.value) +
+                            }?.value ?: "npe(No Issue or Проблема field)") +
                                     StringEscapeUtils.escapeXml10(
-                                        if (!addittionFields.isNullOrEmpty()) {
-                                            "\n" + addittionFields.joinToString() + "\n" + requestData.faq_addon
-                                        } else "\n" + requestData.faq_addon
+                                        "\nFAQ:" + if (!addittionFields.isNullOrEmpty()) {
+                                            "\n" + addittionFields.joinToString() + "\n" + requestData.faq?.joinToString()
+                                        } else "\n" + requestData.faq?.joinToString()
                                     ),
                             attachments = requestData.files
                         ),

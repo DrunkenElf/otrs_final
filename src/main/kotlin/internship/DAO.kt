@@ -37,7 +37,7 @@ data class Field(
 
 data class RequestData(
     var widgetName: String?,
-    var faq_addon: String?,
+    var faq: ArrayList<String?>?,
     var fieldsValue: ArrayList<Field?>?,
     var files: ArrayList<FileData?>?
 )
