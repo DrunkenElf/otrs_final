@@ -2,6 +2,7 @@
   "widgets": [
     {
       "id": 1,
+      "order": 1,
       "name": "Access Management",
       "description": "Access Management Support",
       "fields": [
@@ -37,6 +38,7 @@
     },
     {
       "id": 2,
+      "order": 2,
       "name": "PC Support",
       "description": "PC Support",
       "fields": [
@@ -72,6 +74,7 @@
     },
     {
       "id": 3,
+      "order": 3,
       "name": "Business-Application",
       "description": "Business System Support",
       "fields": [
@@ -107,6 +110,7 @@
     },
     {
       "id": 4,
+      "order": 4,
       "name": "Telecommunications",
       "description": "Telecommunications Support",
       "fields": [
@@ -142,6 +146,7 @@
     },
     {
       "id": 5,
+      "order": 5,
       "name": "Mobile & BYOD",
       "description": "Mobile Devices and Personal Gadgets Support",
       "fields": [
@@ -177,6 +182,7 @@
     },
     {
       "id": 6,
+      "order": 6,
       "name": "Infrastructure",
       "description": "Infrastructure Services Support",
       "fields": [
@@ -211,7 +217,8 @@
       ]
     },
     {
-      "id": 7,
+      "id": 8,
+      "order": 8,
       "name": "Purchase",
       "description": "Purchase Processes Support",
       "fields": [
@@ -247,6 +254,7 @@
     },
     {
       "id": 8,
+      "order": 8,
       "name": "Administrative (Back Office)",
       "description": "Requests for Administrative Department (Back Office)",
       "fields": [
@@ -282,6 +290,7 @@
     },
     {
       "id": 9,
+      "order": 9,
       "name": "Hire to Retire (HR)",
       "description": "Human Resources Requests Support",
       "fields": [
@@ -317,6 +326,7 @@
     },
     {
       "id": 10,
+      "order": 10,
       "name": "Order to Cash (Sales)",
       "description": "Sale Processes Support",
       "fields": [
@@ -352,6 +362,7 @@
     },
     {
       "id": 11,
+      "order": 11,
       "name": "New Opportunities",
       "description": "New Opportunities Support",
       "fields": [
@@ -387,6 +398,7 @@
     },
     {
       "id": 12,
+      "order": 12,
       "name": "Radiant System OTRS Services",
       "description": "OTRS Professional Services",
       "fields": [
@@ -422,6 +434,7 @@
     },
     {
       "id": 13,
+      "order": 13,
       "name": "new title en",
       "description": "описаныивыве en",
       "fields": [
@@ -446,6 +459,7 @@
     },
     {
       "id": 14,
+      "order": 14,
       "name": "asdsadfsdfsad title",
       "description": "descrip en",
       "fields": [
