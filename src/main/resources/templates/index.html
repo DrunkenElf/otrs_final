@@ -57,16 +57,14 @@
                 </div>
                 <hr class="green-hr">
                 <div class="main-header_links">
-                    <a v-if="language === 0" @click="setMainMenu(0)" id="link0">New Ticket</a>
-                    <a v-else @click="setMainMenu(0)" id="link0">Новый тикет</a>
-                    <a v-if="language === 0" @click="setMainMenu(1)" id="link1">Opened Tickets</a>
-                    <a v-else @click="setMainMenu(1)" id="link1">Открытые тикеты</a>
-                    <a v-if="language === 0" @click="setMainMenu(2)" id="link2">Resolved Tickets</a>
-                    <a v-else @click="setMainMenu(2)" id="link2">Решенные тикеты</a>
-                    <a v-if="language === 0" @click="setMainMenu(3)" id="link3">All Tickets</a>
-                    <a v-else @click="setMainMenu(3)" id="link3">Все тикеты</a>
-                    <a v-if="language === 0" @click="setMainMenu(4)" id="link4" class="last-element">FAQ</a>
-                    <a v-else @click="setMainMenu(4)" id="link4" class="last-element">FAQ</a>
+                    <a v-if="language === 0" @click="setMainMenu(0)" id="link0" :class="{'green-color' :(main_menu === 0)}">New Ticket</a>
+                    <a v-else @click="setMainMenu(0)" id="link0" :class="{'green-color' :(main_menu === 0)}">Новый тикет</a>
+                    <a v-if="language === 0" @click="setMainMenu(1)" id="link1" :class="{'green-color' :(main_menu === 1)}">Opened Tickets</a>
+                    <a v-else @click="setMainMenu(1)" id="link1" :class="{'green-color' :(main_menu === 1)}">Открытые тикеты</a>
+                    <a v-if="language === 0" @click="setMainMenu(2)" id="link2" :class="{'green-color' :(main_menu === 2)}">Resolved Tickets</a>
+                    <a v-else @click="setMainMenu(2)" id="link2" :class="{'green-color' :(main_menu === 2)}">Решенные тикеты</a>
+                    <a v-if="language === 0" @click="setMainMenu(3)" id="link3" class="last-element" :class="{'green-color' :(main_menu === 3)}">All Tickets</a>
+                    <a v-else @click="setMainMenu(3)" id="link3" class="last-element" :class="{'green-color' :(main_menu === 3)}">Все тикеты</a>
                 </div>
                 <hr class="green-hr">
             </header>
@@ -227,9 +225,6 @@
                 </div>
             </main>
 
-            <main v-if="main_menu === 4">
-
-            </main>
         </div>
 
         <!- Request ->
@@ -262,7 +257,7 @@
                                 <div v-for="i in widget.faq">
                                     <div class="faq_title">
                                         <h3 v-text="i.question"></h3>
-                                        <a @click="setQuestion(i.id)">
+                                        <a @click="setQuestion(i.id); addFAQquestion(i.question)">
                                             <img src="/static/assets/img/chevron-down.png" alt="chevron">
                                         </a>
                                     </div>
@@ -295,6 +290,12 @@
                                 <input v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "input"' v-bind:placeholder="field.placeholder" class="input border small-margin">
                                 <textarea v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "textarea"' v-bind:placeholder="field.placeholder" class="textarea border small-margin"></textarea>
                             </div>
+
+                            <div v-show="requestData.faq.length !== 0" class="request-faq">
+                                <h3>FAQ</h3>
+                                <h4 v-for="i in requestData.faq" class="middle-margin" v-text="i"></h4>
+                            </div>
+
                             <h3 v-if="language === 0">Files</h3>
                             <h3 v-else>Файлы</h3>
                             <input type="file" @change="onFileSelected" class="small-margin" multiple>

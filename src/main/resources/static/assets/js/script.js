@@ -18,7 +18,7 @@ let widgets = new Vue({
         },
         requestData: {
             widgetName: "",
-            faq_addon: "",
+            faq: [],
             fieldsValue: [],
             file: []
         },
@@ -59,7 +59,7 @@ let widgets = new Vue({
                 //let data = JSON.stringify(this.requestData);
                 const formData = new FormData();
                 formData.append('widgetName', this.requestData.widgetName)
-                formData.append('faq_addon', this.requestData.faq_addon)
+                formData.append('faq', JSON.stringify(this.requestData.faq))
                 formData.append('fieldsValue', JSON.stringify(this.requestData.fieldsValue))
                 for (let i = 0; i < this.requestData.file.length; i++) {
                     formData.append(this.requestData.file[i].name, this.requestData.file[i])
@@ -80,6 +80,13 @@ let widgets = new Vue({
         },
         isEven(i) {
             return i % 2 === 0;
+        },
+        addFAQquestion(i) {
+            this.requestData.faq = [];
+            this.requestData.faq.push(i);
+        },
+        addFAQanswer(i) {
+            this.requestData.faq.push(i);
         },
         setTicketNumber(i) {
             this.ticket_number = i;
@@ -145,7 +152,8 @@ let widgets = new Vue({
             this.answer_id = 0;
         },
         setFAQlist(question, yes) {
-            this.requestData.faq_addon += "\n"+question+" - "+yes
+            //this.requestData.faq += "\n"+question+" - "+yes
+            this.requestData.faq.push( ""+question+" - "+yes)
             this.faq_list = true;
             this.question_id = 0;
             this.answer_id = 0;
@@ -166,15 +174,15 @@ let widgets = new Vue({
             if (this.answer_id >= this.widgets[this.display - 1].faq[this.question_id].answers.length) {
                 this.faq_list = true;
             }
-            this.requestData.faq_addon += "\n"+question+" - "+no
+            this.requestData.faq.push( ""+question+" - "+no)
         },
         changeLanguage() {
             if (this.language === 0) {
-                this.widgets = this.widgetsRU;
+                this.widgets = this.widgetsRU.sort((a,b) => (a.order > b.order) ? 1 : ((b.order > a.order) ? -1 : 0));
                 this.language = 1;
                 this.lng_image = "/static/assets/img/toggle-right.png"
             }else {
-                this.widgets = this.widgetsEN;
+                this.widgets = this.widgetsEN.sort((a,b) => (a.order > b.order) ? 1 : ((b.order > a.order) ? -1 : 0));
                 this.language = 0;
                 this.lng_image = "/static/assets/img/toggle-left.png"
             }
@@ -208,7 +216,7 @@ let widgets = new Vue({
         axios.get('/json').then((response) =>{
             this.widgetsEN = response.data.widgets;
             this.session = response.data.session;
-            this.widgets = this.widgetsEN;
+            this.widgets = this.widgetsEN.sort((a,b) => (a.order > b.order) ? 1 : ((b.order > a.order) ? -1 : 0));
         });
         axios.get('/json_ru').then((response) =>{
             this.widgetsRU = response.data.widgets;
