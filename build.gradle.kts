@@ -87,7 +87,8 @@ tasks.processResources {
             //"KTOR_ENV" to "dev",
             "KTOR_PORT" to "81",
             "KTOR_MODULE" to "",
-            "KTOR_AUTORELOAD" to "false"
+            "KTOR_AUTORELOAD" to "false",
+            "KTOR_HOST" to "10.90.138.10"
         )
        /* when (env) {
             "development" -> {
