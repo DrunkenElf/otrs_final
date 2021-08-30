@@ -50,6 +50,9 @@ let widgets = new Vue({
                 this.main_menu = 0
             }
         },
+        goToTicketInfo(ticketNumber){
+            window.location.replace('http://10.90.138.10/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber='+ticketNumber);
+        },
         setRequest() {
             console.log(this.session.sessionId)
             if (this.session.sessionId === "")
