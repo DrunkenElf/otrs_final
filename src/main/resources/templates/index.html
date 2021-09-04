@@ -270,7 +270,8 @@
                                         <a @click="setFAQlist">
                                             <img src="/static/assets/img/arrow-left.png" alt="arrow" height="35">
                                         </a>
-                                        <h3 v-text="widget.faq[question_id].answers[answer_id]"></h3>
+                                        <h3 v-if="!isLink(widget.faq[question_id].answers[answer_id])" v-text="widget.faq[question_id].answers[answer_id]"></h3>
+                                        <a v-else :href="widget.faq[question_id].answers[answer_id]" v-text="widget.faq[question_id].answers[answer_id]" target="_blank"></a>
                                     </div>
                                     <div class="faq_buttons middle-margin">
                                         <button v-if="language === 0" @click="setNextAnswer(widget.faq[question_id].answers[answer_id], 'No')" class="button">No</button>
@@ -287,8 +288,8 @@
                             <h2 v-else class="middle-margin">Заполните форму</h2>
                             <div class="request-field" v-for="field in widget.fields">
                                 <h3 v-text="field.title"></h3>
-                                <input v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "input"' v-bind:placeholder="field.placeholder" class="input border small-margin">
-                                <textarea v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "textarea"' v-bind:placeholder="field.placeholder" class="textarea border small-margin"></textarea>
+                                <input v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "input"' v-bind:placeholder="field.placeholder" class="input border small-margin" required>
+                                <textarea v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "textarea"' v-bind:placeholder="field.placeholder" class="textarea border small-margin" required></textarea>
                             </div>
 
                             <div v-show="requestData.faq.length !== 0" class="request-faq">

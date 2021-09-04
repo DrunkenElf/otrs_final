@@ -51,7 +51,8 @@ let widgets = new Vue({
             }
         },
         goToTicketInfo(ticketNumber){
-            window.location.replace('http://10.90.138.10/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber='+ticketNumber);
+            //window.location.replace('http://10.90.138.10/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber='+ticketNumber);
+            window.location.href = 'http://10.90.138.10/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber='+ticketNumber;
         },
         setRequest() {
             console.log(this.session.sessionId)
@@ -70,9 +71,6 @@ let widgets = new Vue({
 
                 axios.post('/createTicket', formData, {
                     headers: { 'Content-Type': 'multipart/form-data;charset=UTF-8' }
-                    /*headers: {
-                        'Content-Type': 'application/json;charset=UTF-8'
-                    }*/
                 }).then((response) => {
                     console.log(response);
                     this.requestResp = response.data;
@@ -83,6 +81,16 @@ let widgets = new Vue({
         },
         isEven(i) {
             return i % 2 === 0;
+        },
+        isLink(i) {
+            let url;
+            try {
+                url = new URL(i);
+            }catch (_) {
+                return false;
+            }
+
+            return url.protocol === "http:" || url.protocol === "https:"
         },
         addFAQquestion(i) {
             this.requestData.faq = [];
@@ -216,6 +224,10 @@ let widgets = new Vue({
         }
     },
     created: function () {
+        console.log(window.history.state);
+        //console.log(window.location.history.state);
+        //console.log(window.location.history.prototype);
+        //window.location.
         axios.get('/json').then((response) =>{
             this.widgetsEN = response.data.widgets;
             this.session = response.data.session;

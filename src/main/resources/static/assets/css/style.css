@@ -98,11 +98,11 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   height: 45px;
   max-width: 100%;
 }
@@ -111,8 +111,8 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
 }
 .main-header_left h1 {
   margin-left: 10px;
@@ -122,8 +122,8 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
 }
 .main-header_right * {
   margin-right: 5px;
@@ -143,18 +143,18 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   padding-top: 10px;
   padding-bottom: 10px;
 }
 .main-header_links a {
   -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
+  -ms-flex: 1;
+  flex: 1;
   padding: 0.5em;
   text-align: center;
   border-right: 1px solid #80BC00;
@@ -180,8 +180,8 @@ a:hover {
   display: -ms-grid;
   display: grid;
   -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   -ms-grid-columns: 30% 2em 30% 2em 30%;
   grid-template-columns: repeat(3, 30%);
   grid-auto-rows: 150px;
@@ -196,11 +196,11 @@ a:hover {
   display: flex;
   -webkit-box-orient: vertical;
   -webkit-box-direction: normal;
-      -ms-flex-flow: column wrap;
-          flex-flow: column wrap;
+  -ms-flex-flow: column wrap;
+  flex-flow: column wrap;
   -webkit-box-pack: start;
-      -ms-flex-pack: start;
-          justify-content: flex-start;
+  -ms-flex-pack: start;
+  justify-content: flex-start;
   padding: 1em;
   background-color: #fff;
   border-radius: 20px;
@@ -213,8 +213,8 @@ a:hover {
   display: -ms-grid;
   display: grid;
   -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   -ms-grid-columns: 1fr;
   grid-template-columns: 1fr;
   padding: 1em;
@@ -242,8 +242,8 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: end;
-      -ms-flex-pack: end;
-          justify-content: flex-end;
+  -ms-flex-pack: end;
+  justify-content: flex-end;
 }
 
 .button {
@@ -265,8 +265,8 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   height: 45px;
   max-width: 100%;
 }
@@ -279,8 +279,8 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
 }
 
 .faq {
@@ -294,11 +294,11 @@ a:hover {
   display: flex;
   padding: 4px 0;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   border-top: 1px solid #D1D1D1;
   border-bottom: 1px solid #D1D1D1;
 }
@@ -314,15 +314,19 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+.faq_answer_title a {
+  font-family: "Electrolize", sans-serif;
+  font-size: 20px;
 }
 .faq_buttons {
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
   -ms-flex-pack: distribute;
-      justify-content: space-around;
+  justify-content: space-around;
 }
 
 .faq_edit {
@@ -337,11 +341,11 @@ a:hover {
   display: flex;
   width: 100%;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
 }
 .faq_edit-title i {
   margin-left: 10px;
@@ -352,8 +356,8 @@ a:hover {
   display: flex;
   width: 100%;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   margin-bottom: 5px;
 }
 .faq_edit-name h3, .faq_edit-name img {
@@ -379,11 +383,11 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
+  -ms-flex-pack: justify;
+  justify-content: space-between;
   padding-left: 80px;
   width: 88%;
 }
@@ -396,8 +400,8 @@ a:hover {
   display: flex;
   width: 100%;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   margin-bottom: 5px;
 }
 .faq_edit-answer-name h4 {
@@ -458,8 +462,8 @@ a:hover {
   display: -ms-grid;
   display: grid;
   -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
 }
 .successful * {
   margin: 5px auto 5px auto;
@@ -473,21 +477,24 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
   height: 10px;
   margin: 15px 0 15px 0;
 }
 .add-field hr {
   -webkit-box-flex: 1;
-      -ms-flex: 1;
-          flex: 1;
+  -ms-flex: 1;
+  flex: 1;
   border: none;
   background-color: #80BC00;
   height: 1px;
+}
+.add-field button {
+  font-size: 18px;
 }
 .add-field__button {
   border: none;
@@ -498,6 +505,10 @@ a:hover {
 .add-field-faq {
   padding-left: 40px;
   width: 90%;
+}
+
+.green-color {
+  color: #80BC00;
 }
 
 .ticket_number {
@@ -538,6 +549,7 @@ a:hover {
 }
 .ticket_table_date {
   color: black;
+  text-decoration: underline;
 }
 .ticket_table_title {
   padding-left: 15px;
@@ -553,8 +565,8 @@ a:hover {
   display: -ms-flexbox;
   display: flex;
   -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
   margin-top: 10px;
 }
 .ticket_table_buttons span {
@@ -586,8 +598,8 @@ a:hover {
 @media only screen and (max-width: 1100px) {
   .grid-menu {
     -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
     -ms-grid-columns: 40% 2em 40%;
     grid-template-columns: repeat(2, 40%);
     grid-auto-rows: 150px;
@@ -605,8 +617,8 @@ a:hover {
 @media only screen and (max-width: 720px) {
   .grid-menu {
     -webkit-box-pack: center;
-        -ms-flex-pack: center;
-            justify-content: center;
+    -ms-flex-pack: center;
+    justify-content: center;
     -ms-grid-columns: 90%;
     grid-template-columns: repeat(1, 90%);
     grid-auto-rows: 150px;
