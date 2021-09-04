@@ -19,7 +19,7 @@ import kotlin.collections.ArrayList
 
 const val address = "http://10.90.138.10"
 
-fun writeFile(file: File, srcPath: String){
+fun writeFile(file: File, srcPath: String) {
     val writer = file.bufferedWriter()
     val prefs = Application::class.java.classLoader.getResourceAsStream(srcPath)
         ?.bufferedReader().use { res -> res?.readText() }
@@ -31,31 +31,30 @@ fun writeFile(file: File, srcPath: String){
 }
 
 val shouldRewriteFiles = File("resources/version.txt").also { child ->
-        if (!child.exists()) {
-            child.createNewFile()
+    if (!child.exists()) {
+        child.createNewFile()
+        val writer = child.bufferedWriter()
+        val cl = Application::class.java.`package`.implementationVersion
+        println("created jar version")
+        writer.write(cl)
+        writer.flush()
+        writer.close()
+        writeFiles()
+    } else {
+        val version = File("resources/version.txt").readText().toInt()
+        val newVersion = Application::class.java.`package`.implementationVersion.toInt()
+        if (newVersion > version) {
             val writer = child.bufferedWriter()
-            val cl = Application::class.java.`package`.implementationVersion
-            println("created jar version")
-            writer.write(cl)
+            writer.write(newVersion.toString())
             writer.flush()
             writer.close()
             writeFiles()
-        } else {
-            val version = File("resources/version.txt").readText().toInt()
-            val newVersion = Application::class.java.`package`.implementationVersion.toInt()
-            if (newVersion > version){
-                val writer = child.bufferedWriter()
-                writer.write(newVersion.toString())
-                writer.flush()
-                writer.close()
-                writeFiles()
-            }
         }
     }
+}
 
 
-
-fun writeFiles(){
+fun writeFiles() {
     File("resources/jsons").also {
         if (!it.exists()) it.mkdirs()
         File(it, "admin.json").also { child ->
@@ -93,8 +92,8 @@ fun Application.configureRouting() {
                 "/admin" -> {
                     val admin = call.sessions.get<AdminSession>()
                     println(admin.toString())
-                    if (admin != null){
-                        if (checkAdminLogin(User(admin.login, admin.psw))){
+                    if (admin != null) {
+                        if (checkAdminLogin(User(admin.login, admin.psw))) {
                             call.application.environment.log.info("intercept admin success")
                         } else {
                             call.application.environment.log.info("go to login again; inner")
@@ -248,9 +247,10 @@ fun Application.configureRouting() {
                                 )
                             }?.value ?: "npe(No Issue or Проблема field)") +
                                     StringEscapeUtils.escapeXml10(
-                                        "\nFAQ:" + if (!addittionFields.isNullOrEmpty()) {
-                                            "\n" + addittionFields.joinToString() + "\n" + requestData.faq?.joinToString()
-                                        } else "\n" + requestData.faq?.joinToString()
+                                        "\nFAQ:" +
+                                                if (!addittionFields.isNullOrEmpty()) {
+                                                    "\n" + joinWithNxtLine(ArrayList(addittionFields)) + "\n" + joinWithNxtLine(requestData.faq)
+                                                } else "\n" + joinWithNxtLine(requestData.faq)
                                     ),
                             attachments = requestData.files
                         ),
@@ -343,4 +343,14 @@ fun Application.configureRouting() {
             }
         }
     }
+}
+
+fun joinWithNxtLine(list: ArrayList<String?>?): String {
+    val sb = StringBuilder()
+    list?.forEachIndexed { i, s ->
+        if (i != list.lastIndex)
+            sb.append("$s\n")
+        else sb.append(s)
+    }
+    return sb.toString()
 }
