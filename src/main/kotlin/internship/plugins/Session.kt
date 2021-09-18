@@ -16,7 +16,7 @@ data class AdminSession(
 fun Application.configureSession(){
     install(Sessions){
         cookie<UserSession>("user_session"){
-            cookie.maxAgeInSeconds = 7200
+            cookie.maxAgeInSeconds = 3600
         }
         cookie<AdminSession>("admin_session"){
             //cookie.maxAgeInSeconds = 360
