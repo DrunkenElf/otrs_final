@@ -3,6 +3,11 @@ axios.defaults.baseURL = '/api/'
 let widgets = new Vue({
     el: '#site',
     data: {
+        loaded: false,
+        link: "",
+        iframe: {
+            src: "https://google.com",
+        },
         display: 0,
         widgetsEN: {},
         widgetsRU: {},
@@ -50,12 +55,80 @@ let widgets = new Vue({
                 this.main_menu = 0
             }
         },
+        async getSrc(url) {
+            const res = await fetch(url, {
+                method: 'GET',
+                headers: {
+                    // Here you can set any headers you want
+                    //"X-Frame-Options": "SAMEORIGIN",
+                    //"Content-Type": "Access-Control-Allow-Origin",
+                    "Referrer Policy": "strict-origin-when-cross-origin",
+                    "Access-Control-Allow-Origin": "*",
+                    "Content-Security-Policy": "frame-ancestors 'self' "+url,
+                    "Host": "10.90.138.10",
+                    "X-Frame-Options": "SAMEORIGIN"
+                }
+            });
+            const blob = await res.blob();
+            const urlObject = URL.createObjectURL(blob);
+            document.querySelector('iframe').setAttribute("src", urlObject)
+            //this.loaded = true;
+        },
         goToTicketInfo(ticketNumber){
             //window.location.replace('http://10.90.138.10/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber='+ticketNumber);
-            window.location.href = 'http://10.90.138.10/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber='+ticketNumber;
+            //window.location.href = 'http://10.90.138.10/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber='+ticketNumber;
+            this.iframe.src = 'http://10.90.138.10/otrs/userpage.pl?Action=CustomerTicketZoom;TicketNumber='+ticketNumber;
+            //let url = 'http://10.90.138.10/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber='+ticketNumber;
+            //this.getSrc(url);
+            this.loaded = true;
+        },
+        formAddError(input) {
+            input.classList.add('_error');
+        },
+        formRemoveError(input) {
+            input.classList.remove('_error');
         },
         setRequest() {
-            console.log(this.session.sessionId)
+            let fields = document.querySelectorAll("._req");
+            let error = 0;
+
+            for (let i = 0; i < fields.length; i++) {
+                const input = fields[i];
+                this.formRemoveError(input);
+                if (input.value === "") {
+                    this.formAddError(input);
+                    error++;
+                }
+            }
+
+            if (error === 0){
+                console.log(this.session.sessionId)
+                if (this.session.sessionId === "")
+                    alert("Please, login to create ticket")
+                else {
+                    this.requestData.widgetName = this.widgets[this.display - 1].name
+                    //let data = JSON.stringify(this.requestData);
+                    const formData = new FormData();
+                    formData.append('widgetName', this.requestData.widgetName)
+                    formData.append('faq', JSON.stringify(this.requestData.faq))
+                    formData.append('fieldsValue', JSON.stringify(this.requestData.fieldsValue))
+                    for (let i = 0; i < this.requestData.file.length; i++) {
+                        formData.append(this.requestData.file[i].name, this.requestData.file[i])
+                    }
+
+                    axios.post('/createTicket', formData, {
+                        headers: { 'Content-Type': 'multipart/form-data;charset=UTF-8' }
+                    }).then((response) => {
+                        console.log(response);
+                        this.requestResp = response.data;
+                        this.requestStatus = true;
+                        this.getUserData();
+                    });
+                    this.requestStatus = true;
+                    button.disabled = false;
+                }
+            }
+            /*console.log(this.session.sessionId)
             if (this.session.sessionId === "")
                 alert("Please, login to create ticket")
             else {
@@ -76,7 +149,7 @@ let widgets = new Vue({
                     this.requestResp = response.data;
                     this.requestStatus = true;
                 });
-            }
+            }*/
             //this.requestStatus = true;
         },
         isEven(i) {
@@ -221,6 +294,14 @@ let widgets = new Vue({
             for (let i = 0; i < event.target.files.length; i++) {
                 this.requestData.file.push(event.target.files[i]);
             }
+        },
+        getUserData(){
+            axios.get('/user').then((response) =>{
+                this.user = response.data;
+                this.tickets = this.getTicketArray();
+                this.openTickets = this.getOpenTickets();
+                this.closedTickets = this.getClosedTickets();
+            });
         }
     },
     created: function () {

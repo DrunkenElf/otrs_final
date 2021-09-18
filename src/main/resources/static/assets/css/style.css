@@ -81,6 +81,10 @@ a:hover {
   border: 1px solid #80BC00;
 }
 
+._error {
+  border: 1px solid red;
+}
+
 .big-margin {
   margin: 40px 0 40px 0;
 }

@@ -2,9 +2,9 @@
   "widgets": [
     {
       "id": 1,
-      "order": 1,
       "name": "Контроль Доступа",
       "description": "Поддержка контроля доступа",
+      "icon": "/static/assets/img/fi_lock.png",
       "fields": [
         {
           "title": "Тема",
@@ -38,9 +38,9 @@
     },
     {
       "id": 2,
-      "order": 2,
       "name": "Поодержка ПК",
       "description": "Поддержка ПК",
+      "icon": "/static/assets/img/monitor.png",
       "fields": [
         {
           "title": "Тема",
@@ -74,9 +74,9 @@
     },
     {
       "id": 3,
-      "order": 3,
       "name": "Бизнес",
       "description": "Поддержка Бизнес Системы",
+      "icon": "/static/assets/img/briefcase.png",
       "fields": [
         {
           "title": "Тема",
@@ -110,9 +110,9 @@
     },
     {
       "id": 4,
-      "order": 4,
       "name": "Телекоммуникации",
       "description": "Поддержка Телекоммуникации",
+      "icon": "/static/assets/img/wifi.png",
       "fields": [
         {
           "title": "Тема",
@@ -146,9 +146,9 @@
     },
     {
       "id": 5,
-      "order": 5,
       "name": "Телефон",
       "description": "Поддержка Мобильных Гаджетов",
+      "icon": "/static/assets/img/smartphone.png",
       "fields": [
         {
           "title": "Тема",
@@ -182,9 +182,9 @@
     },
     {
       "id": 6,
-      "order": 6,
       "name": "Инфраструктура",
       "description": "Поддержка инфраструктуры",
+      "icon": "/static/assets/img/globe.png",
       "fields": [
         {
           "title": "Тема",
@@ -218,9 +218,9 @@
     },
     {
       "id": 7,
-      "order": 7,
       "name": "Покупки",
       "description": "Поддержка Процесса Покупок",
+      "icon": "/static/assets/img/shopping-cart.png",
       "fields": [
         {
           "title": "Тема",
@@ -254,9 +254,9 @@
     },
     {
       "id": 8,
-      "order": 8,
       "name": "Администрация",
       "description": "Запрос для Администрации",
+      "icon": "/static/assets/img/settings.png",
       "fields": [
         {
           "title": "Тема",
@@ -290,9 +290,9 @@
     },
     {
       "id": 9,
-      "order": 9,
       "name": "HR",
       "description": "Поддержка HR",
+      "icon": "/static/assets/img/users.png",
       "fields": [
         {
           "title": "Тема",
@@ -326,9 +326,9 @@
     },
     {
       "id": 10,
-      "order": 10,
       "name": "Скидки",
       "description": "Поддержка Скидок",
+      "icon": "/static/assets/img/dollar-sign.png",
       "fields": [
         {
           "title": "Тема",
@@ -362,9 +362,9 @@
     },
     {
       "id": 11,
-      "order": 11,
       "name": "Возможности",
       "description": "Поддержка Возможностей",
+      "icon": "/static/assets/img/check-circle.png",
       "fields": [
         {
           "title": "Тема",
@@ -398,9 +398,9 @@
     },
     {
       "id": 12,
-      "order": 12,
       "name": "ОТРС",
       "description": "Сервисы ОТРС",
+      "icon": "/static/assets/img/navigation.png",
       "fields": [
         {
           "title": "Тема",
@@ -428,63 +428,6 @@
           "answers": [
             "Вы сообщили об этом на ресепшн УИ?",
             "Вы можете перевыпустить пропуск за 300 рублей"
-          ]
-        }
-      ]
-    },
-    {
-      "id": 13,
-      "order": 13,
-      "name": "новый тайтл ру",
-      "description": "описание ру",
-      "fields": [
-        {
-          "title": "май",
-          "type": "input",
-          "placeholder": "нер"
-        }
-      ],
-      "faq": [
-        {
-          "id": 0,
-          "question": "ввел вопрос",
-          "answers": []
-        },
-        {
-          "id": 1,
-          "question": "ввел еще один вопрос",
-          "answers": []
-        }
-      ]
-    },
-    {
-      "id": 14,
-      "order": 14,
-      "name": "ыфвафвыафыва title",
-      "description": "desc ru",
-      "fields": [
-        {
-          "title": "gsfwgwgw",
-          "type": "input",
-          "placeholder": "wrewgwegewer"
-        },
-        {
-          "title": "adsfadsf",
-          "placeholder": "w3rggrw4",
-          "type": "input"
-        }
-      ],
-      "faq": [
-        {
-          "id": 0,
-          "question": "sadfa",
-          "answers": []
-        },
-        {
-          "id": 1,
-          "question": "ssssssss",
-          "answers": [
-            "Введите новый вопросфывафыва"
           ]
         }
       ]

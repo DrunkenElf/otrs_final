@@ -125,6 +125,14 @@
                     <span v-if="pageID + 2 < pageNumbers">...</span>
                     <button @click="setPage(pageNumbers)" v-if="pageID + 1 < pageNumbers" v-text="pageNumbers"></button>
                 </div>
+
+                <iframe
+                        v-if="loaded"
+                        :src="iframe.src"
+                        :height="400"
+                        :width="600"
+                        frameborder="5"
+                ></iframe>
             </main>
 
             <main v-if="main_menu === 2" class="big-margin">
@@ -288,8 +296,8 @@
                             <h2 v-else class="middle-margin">Заполните форму</h2>
                             <div class="request-field" v-for="field in widget.fields">
                                 <h3 v-text="field.title"></h3>
-                                <input v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "input"' v-bind:placeholder="field.placeholder" class="input border small-margin" required>
-                                <textarea v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "textarea"' v-bind:placeholder="field.placeholder" class="textarea border small-margin" required></textarea>
+                                <input v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "input"' v-bind:placeholder="field.placeholder" class="input border small-margin _req">
+                                <textarea v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "textarea"' v-bind:placeholder="field.placeholder" class="textarea border small-margin _req"></textarea>
                             </div>
 
                             <div v-show="requestData.faq.length !== 0" class="request-faq">
@@ -300,8 +308,8 @@
                             <h3 v-if="language === 0">Files</h3>
                             <h3 v-else>Файлы</h3>
                             <input type="file" @change="onFileSelected" class="small-margin" multiple>
-                            <button v-if="language === 0" v-on:click="setRequest()" class="button">Report</button>
-                            <button v-else v-on:click="setRequest()" class="button">Сообщить</button>
+                            <button v-if="language === 0" v-on:click="setRequest()" class="button" id="report_button">Report</button>
+                            <button v-else v-on:click="setRequest()" class="button" id="report_button">Сообщить</button>
                         </div>
 
                     </div>

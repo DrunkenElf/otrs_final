@@ -210,7 +210,7 @@
                             <option v-for="(key, name) in fieldTypes" :value="name" v-text="key"
                                     class="border"></option>
                         </select>
-                        <i class="fas fa-times" v-on:click="deleteField(i - 1)"></i>
+                        <i v-if="i > 2" class="fas fa-times" v-on:click="deleteField(i - 1)"></i>
 
                         <input v-model.trim="editDataRU.fields[i - 1].title" placeholder="Заголовок Поля"
                                class="input small-size border small-margin">
@@ -410,9 +410,9 @@
                 <h3 v-if="language === 0">Issue Fields</h3>
                 <h3 v-else>Поля Категории</h3>
 
-                <div class="fields" v-for="i in newCategory.fields.length">
+                <div class="fields" v-for="i in getObjectsSize(newCategory.fields)">
 
-                    <input v-model.trim="newCategory.fields[i - 1].title" placeholder="Field Title"
+                <input v-model.trim="newCategory.fields[i - 1].title" placeholder="Field Title"
                            class="input small-size border small-margin">
                     <input v-model.trim="newCategory.fields[i - 1].placeholder" placeholder="Field Description"
                            class="input middle-size border small-margin">
@@ -421,7 +421,7 @@
                         <option v-else disabled value="" class="border">Тип</option>
                         <option v-for="(key, name) in fieldTypes" :value="name" v-text="key" class="border"></option>
                     </select>
-                    <i class="fas fa-times" v-on:click="deleteNewField(i - 1)"></i>
+                    <i v-if="i > 2" class="fas fa-times" v-on:click="deleteNewField(i - 1)"></i>
 
                     <input v-model.trim="newCategoryRU.fields[i - 1].title" placeholder="Заголовок Поля"
                            class="input small-size border small-margin">
@@ -443,9 +443,9 @@
                     <h2 class="middle-margin">FAQ</h2>
                     <hr class="middle-margin">
 
-                    <div v-for="i in newCategory.faq.length" class="faq_edit">
+                    <div v-for="i in getObjectsSize(newCategory.faq)" class="faq_edit">
 
-                        <div class="faq_edit-title">
+                    <div class="faq_edit-title">
                             <div class="faq_edit-name">
                                 <img @click="changeImage('image' + '404' + newCategory.faq[i - 1].id); showAnswers('answer' + '404' + newCategory.faq[i - 1].id)"
                                      src="/static/assets/img/chevron-down.png" alt="arrow"

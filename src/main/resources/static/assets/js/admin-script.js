@@ -35,15 +35,20 @@ let widgets = new Vue({
             description: "",
             fields: [
                 {
-                    title: "",
+                    title: "Topic",
                     type: "input",
-                    placeholder: ""
+                    placeholder: "Enter topic of your issue"
+                },
+                {
+                    title: "Issue",
+                    type: "textarea",
+                    placeholder: "Tell us more about your problem..."
                 }
             ],
             faq: [
                 {
                     id: 0,
-                    question: "Please enter question",
+                    question: "Enter the question",
                     answers: []
                 }
             ]
@@ -54,9 +59,14 @@ let widgets = new Vue({
             description: "",
             fields: [
                 {
-                    title: "",
+                    title: "Тема",
                     type: "input",
-                    placeholder: ""
+                    placeholder: "Введите тему вашей проблемы"
+                },
+                {
+                    title: "Проблема",
+                    type: "textarea",
+                    placeholder: "Напишите подробнее о вашей проблеме..."
                 }
             ],
             faq: [
@@ -139,6 +149,9 @@ let widgets = new Vue({
         },
         isEven(i) {
             return i % 2 === 0;
+        },
+        getObjectsSize(data) {
+            return Object.keys(data).length;
         },
         setTicketNumber(i) {
             this.ticket_number = i;
@@ -277,14 +290,14 @@ let widgets = new Vue({
             this.newCategory.name = "";
             this.newCategory.description = "";
             this.newCategory.icon = "";
-            this.newCategory.fields = [{"title": "", "type": "input", "placeholder": ""}];
+            this.newCategory.fields = [{title: "Topic", type: "input", placeholder: "Enter topic of your issue"}, {title: "Issue", type: "textarea", placeholder: "Tell us more about your problem..."}];
             this.newCategory.faq = [{id: 0, question: "Please enter the question", answers: []}];
             this.newCategoryRU.id = "";
             this.newCategoryRU.order = "";
             this.newCategoryRU.name = "";
             this.newCategoryRU.description = "";
             this.newCategoryRU.icon = "";
-            this.newCategoryRU.fields = [{"title": "", "type": "input", "placeholder": ""}]
+            this.newCategoryRU.fields = [{title: "Тема", type: "input", placeholder: "Введите тему вашей проблемы"}, {title: "Проблема", type: "textarea", placeholder: "Напишите подробнее о вашей проблеме..."}]
             this.newCategoryRU.faq = [{id: 0, question: "Введите новый вопрос", answers: []}]
         },
         updateCategory() {
