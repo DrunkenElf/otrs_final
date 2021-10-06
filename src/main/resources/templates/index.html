@@ -100,7 +100,7 @@
                         <tbody>
                         <tr v-for="i in openTickets.length" v-if="((i - 1) >= ticketFirstId && (i - 1) < (ticketFirstId + ticket_number))" v-bind:class="{'white_colored' :isEven(i - 1)}">
                             <td>
-                                <a class="ticket_table_date" @click="goToTicketInfo(getData(openTickets[i - 1].tic_num))" target="_blank">
+                                <a class="ticket_table_date" @click="goToTicketInfo(openTickets[i - 1].tic_num)" target="_blank">
                                     <span v-text="getData(openTickets[i - 1].time)"></span>
                                 </a>
                             </td>
@@ -127,11 +127,9 @@
                 </div>
 
                 <iframe
+                        class="frame_tic"
                         v-if="loaded"
                         :src="iframe.src"
-                        :height="400"
-                        :width="600"
-                        frameborder="5"
                 ></iframe>
             </main>
 
@@ -157,7 +155,10 @@
                         <tbody>
                         <tr v-for="i in closedTickets.length" v-if="((i - 1) >= ticketFirstId && (i - 1) < (ticketFirstId + ticket_number))" v-bind:class="{'white_colored' :isEven(i - 1)}">
                             <td>
-                                <a class="ticket_table_date" :href="'http://10.90.138.10/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber=' + getData(openTickets[i - 1].tic_num)" target="_blank">
+                                <!--<a class="ticket_table_date" :href="'http://10.90.138.10/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber=' + getData(openTickets[i - 1].tic_num)" target="_blank">
+                                    <span v-text="getData(openTickets[i - 1].time)"></span>
+                                </a>-->
+                                <a class="ticket_table_date" @click="goToTicketInfo(openTickets[i - 1].tic_num)" target="_blank">
                                     <span v-text="getData(openTickets[i - 1].time)"></span>
                                 </a>
                             </td>
@@ -182,6 +183,11 @@
                     <span v-if="pageID + 2 < pageNumbers">...</span>
                     <button @click="setPage(pageNumbers)" v-if="pageID + 1 < pageNumbers" v-text="pageNumbers"></button>
                 </div>
+                <iframe
+                        class="frame_tic"
+                        v-if="loaded"
+                        :src="iframe.src"
+                ></iframe>
             </main>
 
             <main v-if="main_menu === 3" class="big-margin">
@@ -206,7 +212,10 @@
                         <tbody>
                         <tr v-for="i in tickets.length" v-if="((i - 1) >= ticketFirstId && (i - 1) < (ticketFirstId + ticket_number))" v-bind:class="{'white_colored' :isEven(i - 1)}">
                             <td>
-                                <a class="ticket_table_date" :href="'http://10.90.138.10/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber=' + getData(openTickets[i - 1].tic_num)" target="_blank">
+                                <!--<a class="ticket_table_date" :href="'http://10.90.138.10/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber=' + getData(openTickets[i - 1].tic_num)" target="_blank">
+                                    <span v-text="getData(openTickets[i - 1].time)"></span>
+                                </a>-->
+                                <a class="ticket_table_date" @click="goToTicketInfo(openTickets[i - 1].tic_num)" target="_blank">
                                     <span v-text="getData(openTickets[i - 1].time)"></span>
                                 </a>
                             </td>
@@ -231,6 +240,11 @@
                     <span v-if="pageID + 2 < pageNumbers">...</span>
                     <button @click="setPage(pageNumbers)" v-if="pageID + 1 < pageNumbers" v-text="pageNumbers"></button>
                 </div>
+                <iframe
+                        class="frame_tic"
+                        v-if="loaded"
+                        :src="iframe.src"
+                ></iframe>
             </main>
 
         </div>

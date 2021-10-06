@@ -233,8 +233,8 @@ fun Application.configureRouting() {
                 val ticketResp = formTicketCreate(
                     Ticket(
                         title = StringEscapeUtils.escapeXml10(requestData.fieldsValue?.find {
-                            it?.type.equals("Topic") || it?.type.equals(
-                                "Тема"
+                            it?.type.equals("Topic", true) || it?.type.equals(
+                                "Тема", true
                             )
                         }?.value)
                             ?: "npe(No Topic or Тема field)",
@@ -242,8 +242,8 @@ fun Application.configureRouting() {
                         article = Article(
                             subject = StringEscapeUtils.escapeXml10(requestData.widgetName!!),
                             body = StringEscapeUtils.escapeXml10(requestData.fieldsValue?.find {
-                                it?.type.equals("Issue") || it?.type.equals(
-                                    "Проблема"
+                                it?.type.equals("Issue", true) || it?.type.equals(
+                                    "Проблема", true
                                 )
                             }?.value ?: "npe(No Issue or Проблема field)") +
                                     StringEscapeUtils.escapeXml10(

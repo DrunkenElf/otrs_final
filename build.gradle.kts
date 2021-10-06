@@ -60,7 +60,7 @@ val fatJar = task("fatJar", type = Jar::class) {
     duplicatesStrategy = DuplicatesStrategy.INCLUDE
     manifest {
         attributes["Implementation-Title"] = "Ktor - Vue Fat Jar"
-        attributes["Implementation-Version"] = "4"
+        attributes["Implementation-Version"] = "5"
         attributes["Main-Class"] = "io.ktor.server.netty.EngineMain"
     }
     from(configurations.runtimeClasspath.get().map { if (it.isDirectory) it else zipTree(it) })

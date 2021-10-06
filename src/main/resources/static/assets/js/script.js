@@ -6,7 +6,7 @@ let widgets = new Vue({
         loaded: false,
         link: "",
         iframe: {
-            src: "https://google.com",
+            src: "",
         },
         display: 0,
         widgetsEN: {},
@@ -72,7 +72,10 @@ let widgets = new Vue({
             const blob = await res.blob();
             const urlObject = URL.createObjectURL(blob);
             document.querySelector('iframe').setAttribute("src", urlObject)
-            //this.loaded = true;
+            this.loaded = true;
+        },
+        sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
         },
         goToTicketInfo(ticketNumber){
             //window.location.replace('http://10.90.138.10/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber='+ticketNumber);
@@ -81,6 +84,9 @@ let widgets = new Vue({
             //let url = 'http://10.90.138.10/otrs/customer.pl?Action=CustomerTicketZoom;TicketNumber='+ticketNumber;
             //this.getSrc(url);
             this.loaded = true;
+            this.sleep(500).then(() => {
+                window.scrollTo({ left: 0, top: document.body.scrollHeight, behavior: "smooth" });
+            })
         },
         formAddError(input) {
             input.classList.add('_error');
