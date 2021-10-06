@@ -13,6 +13,9 @@ let widgets = new Vue({
         },
         admininfo: "",
         widgets: this.widgetsEN,
+        interface: [],
+        interfaceEN: ["IT Support", "Please Login", "Add new category", "Edit Category", "Fill the form to edit the category", "Enter the index", "Title [en]", "Title [ru]", "Description [en]", "Description [ru]", "Issue Fields", "Type", "+ Add issue field", "+ Add new FAQ", "Delete", "Edit", "Category has been successfully updated!", "Check out the issue page to see the update", "Fill the form to add new category", "Create", "New category has been successfully created!", "Check out the main page to see update."],
+        interfaceRU: ["IT Подержка", "Пожалуйста войдите", "Добавить новую категорию", "Редактирование Категории", "Заполните форму для редактирования", "Введите индекс", "Заголовок [en]", "Заголовок [ru]", "Описание [en]", "Описание [ru]", "Поля Категории", "Тип", "+ Добавить новое поле", "+ Добавить новый FAQ", "Удалить", "Изменить", "Категория успешно изменена!", "Загляните в страницу проблемы, чтобы увидеть изменения", "Заполните форму для создания новой категории", "Создать", "Новая категория была успешно создана!", "Проверьте главную страницу чтобы увдиеть изменения."],
         language: 0,
         lng_image: "/static/assets/img/toggle-left.png",
         requestStatus: false,
@@ -31,6 +34,7 @@ let widgets = new Vue({
         },
         newCategory: {
             id: "",
+            marker: "",
             name: "",
             description: "",
             fields: [
@@ -56,6 +60,7 @@ let widgets = new Vue({
         newCategoryRU: {
             id: "",
             name: "",
+            marker: "",
             description: "",
             fields: [
                 {
@@ -85,6 +90,7 @@ let widgets = new Vue({
         editData: {
             id: "",
             oldID: "",
+            marker: "",
             name: "",
             description: "",
             fields: [],
@@ -93,6 +99,7 @@ let widgets = new Vue({
         editDataRU: {
             id: "",
             oldID: "",
+            marker: "",
             name: "",
             description: "",
             fields: [],
@@ -222,11 +229,15 @@ let widgets = new Vue({
             if (this.language === 0) {
                 this.widgets = this.widgetsRU.sort((a,b) => (a.order > b.order) ? 1 : ((b.order > a.order) ? -1 : 0));
                 this.language = 1;
-                this.lng_image = "/static/assets/img/toggle-right.png"
+                //this.lng_image = "/static/assets/img/toggle-right.png"
+                this.lng_image = "/static/assets/img/toggle-right.png";
+                this.interface = this.interfaceRU;
             }else {
                 this.widgets = this.widgetsEN.sort((a,b) => (a.order > b.order) ? 1 : ((b.order > a.order) ? -1 : 0));
                 this.language = 0;
-                this.lng_image = "/static/assets/img/toggle-left.png"
+                //this.lng_image = "/static/assets/img/toggle-left.png"
+                this.lng_image = "/static/assets/img/toggle-left.png";
+                this.interface = this.interfaceEN;
             }
         },
         getData(data) {
@@ -254,36 +265,70 @@ let widgets = new Vue({
             this.newCategoryRU.fields.push({title: '', placeholder: '', type: "input"});
         },
         updateJSON() {
+            let index = 0;
+            for (let i = 0; i < this.getObjectsSize(this.widgets); i++) {
+                if (this.widgetsEN[i].marker === 0) index = i;
+            }
+            if (index < this.getObjectsSize(this.widgets) - 1) {
+                for (let i = index + 1; i < this.getObjectsSize(this.widgets); i++) {
+                    this.widgetsEN.splice(i, 1);
+                    this.widgetsRU.splice(i, 1);
+                }
+            }
             let data = JSON.stringify(this.widgets);
-            axios.post('/json', data, {
-                headers: {
-                    'Content-Type': 'application/json;charset=UTF-8'
-                }
-            }).then((response) =>{
-                console.log(response);
-                //this.requestStatus = true;
-            })
             let dataRU = JSON.stringify(this.widgetsRU);
-            axios.post('/json_ru', dataRU, {
-                headers: {
-                    'Content-Type': 'application/json;charset=UTF-8'
-                }
-            }).then((response) =>{
-                console.log(response);
+
+            axios.all([
+                axios.post('/json', data, {
+                    headers: {
+                        'Content-Type': 'application/json;charset=UTF-8'
+                    }
+                }),
+                axios.post('/json_ru', dataRU, {
+                    headers: {
+                        'Content-Type': 'application/json;charset=UTF-8'
+                    }
+                })
+            ]).then(axios.spread((dat1, dat2) => {
+                console.log(dat1);
+                console.log(dat2);
                 this.requestStatus = true;
-            });
+            }))
+
             //this.requestStatus = true;
             this.imageName = "Choose a file...";
             this.image = null;
         },
         insertCategory() {
-            this.newCategory.id = this.widgetsEN.length + 1;
+            /*this.newCategory.id = this.widgetsEN.length + 1;
             this.newCategoryRU.id = this.widgetsRU.length + 1;
             this.widgetsEN.push({...this.newCategory});
-            for (let i = 0; i < this.newCategory.fields.length; i++) {
+            for (let i = 0; i < this.newCategory.fields.length; i++) {*/
+            let index = this.newCategory.id - 1;
+            if (index > this.getObjectsSize(this.widgets)) {
+                for (let i = this.getObjectsSize(this.widgetsEN); i <= index + 1; i++) {
+                    this.widgetsEN.push( {id: i, marker: 1, name: "", description: "", icon: "", fields: [], faq: []});
+                    this.widgetsRU.push( {id: i, marker: 1, name: "", description: "", icon: "", fields: [], faq: []})
+                }
+            }
+            this.widgetsEN.splice(index, 0, {id: this.newCategory.id - 1, marker: 0, name: "", description: "", icon: "", fields: [], faq: []});
+            this.widgetsRU.splice(index, 0, {id: this.newCategory.id - 1, marker: 0, name: "", description: "", icon: "", fields: [], faq: []});
+            this.widgetsEN[index].name =  this.newCategory.name;
+            this.widgetsEN[index].description = this.newCategory.description;
+            this.widgetsEN[index].fields = [...this.newCategory.fields];
+            this.widgetsEN[index].faq = [...this.newCategory.faq];
+            this.widgetsRU[index].name =  this.newCategoryRU.name;
+            this.widgetsRU[index].description = this.newCategoryRU.description;
+            for (let i = 0; i < this.newCategoryRU.fields.length; i++) {
                 this.newCategoryRU.fields[i].type = this.newCategory.fields[i].type;
             }
-            this.widgetsRU.push({...this.newCategoryRU});
+            //this.widgetsRU.push({...this.newCategoryRU});
+            this.widgetsRU[index].fields = [...this.newCategoryRU.fields];
+            this.widgetsRU[index].faq = [...this.newCategoryRU.faq];
+            for (let i = 0; i < this.widgetsEN.length; i++) {
+                this.widgetsEN[i].id = i + 1;
+                this.widgetsRU[i].id = i + 1;
+            }
             this.updateJSON();
             this.newCategory.id = "";
             this.newCategory.order = "";
@@ -302,8 +347,17 @@ let widgets = new Vue({
         },
         updateCategory() {
             let index = this.editData.id;
-            this.widgetsEN.splice(index, 0, {id: this.editData.id - 1, name: "", description: "", icon: "", fields: [], faq: []});
-            this.widgetsRU.splice(index, 0, {id: this.editData.id - 1, name: "", description: "", icon: "", fields: [], faq: []});
+            //this.widgetsEN.splice(index, 0, {id: this.editData.id - 1, name: "", description: "", icon: "", fields: [], faq: []});
+            //this.widgetsRU.splice(index, 0, {id: this.editData.id - 1, name: "", description: "", icon: "", fields: [], faq: []});
+            if (index > this.getObjectsSize(this.widgets)) {
+                for (let i = this.getObjectsSize(this.widgetsEN); i <= index + 1; i++) {
+                    this.widgetsEN.push( {id: i, marker: 1, name: "", description: "", icon: "", fields: [], faq: []});
+                    this.widgetsRU.push( {id: i, marker: 1, name: "", description: "", icon: "", fields: [], faq: []})
+                }
+            }
+            this.widgetsEN.splice(index, 0, {id: this.editData.id - 1, marker: 0, name: "", description: "", icon: "", fields: [], faq: []});
+            this.widgetsRU.splice(index, 0, {id: this.editData.id - 1, marker: 0, name: "", description: "", icon: "", fields: [], faq: []});
+
             this.widgetsEN[index].name =  this.editData.name;
             this.widgetsEN[index].description = this.editData.description;
             this.widgetsEN[index].icon = this.editData.icon;
@@ -465,6 +519,7 @@ let widgets = new Vue({
         }
     },
     created: function () {
+        this.interface = this.interfaceEN;
         axios.get('/admin_name').then((response) => {
             console.log(response);
             this.admininfo = response.data.login;

@@ -2,6 +2,7 @@
   "widgets": [
     {
       "id": 1,
+      "marker": 0,
       "name": "Access Management",
       "description": "Access Management Support",
       "icon": "/static/assets/img/fi_lock.png",
@@ -22,7 +23,6 @@
           "id": 0,
           "question": "My university pass expires",
           "answers": [
-            "https://google.com",
             "Did you report this to the university reception?",
             "You can ask university reception on the 1st floor of the UI to re-release your card. You will need to pay a fine 300-rub. '\n' Did it help?"
           ]
@@ -39,6 +39,7 @@
     },
     {
       "id": 2,
+      "marker": 0,
       "name": "PC Support",
       "description": "PC Support",
       "icon": "/static/assets/img/monitor.png",
@@ -75,6 +76,7 @@
     },
     {
       "id": 3,
+      "marker": 0,
       "name": "Business-Application",
       "description": "Business System Support",
       "icon": "/static/assets/img/briefcase.png",
@@ -111,6 +113,7 @@
     },
     {
       "id": 4,
+      "marker": 0,
       "name": "Telecommunications",
       "description": "Telecommunications Support",
       "icon": "/static/assets/img/wifi.png",
@@ -147,6 +150,7 @@
     },
     {
       "id": 5,
+      "marker": 0,
       "name": "Mobile & BYOD",
       "description": "Mobile Devices and Personal Gadgets Support",
       "icon": "/static/assets/img/smartphone.png",
@@ -183,6 +187,7 @@
     },
     {
       "id": 6,
+      "marker": 0,
       "name": "Infrastructure",
       "description": "Infrastructure Services Support",
       "icon": "/static/assets/img/globe.png",
@@ -219,6 +224,7 @@
     },
     {
       "id": 7,
+      "marker": 0,
       "name": "Purchase",
       "description": "Purchase Processes Support",
       "icon": "/static/assets/img/shopping-cart.png",
@@ -255,6 +261,7 @@
     },
     {
       "id": 8,
+      "marker": 0,
       "name": "Administrative (Back Office)",
       "description": "Requests for Administrative Department (Back Office)",
       "icon": "/static/assets/img/settings.png",
@@ -291,6 +298,7 @@
     },
     {
       "id": 9,
+      "marker": 0,
       "name": "Hire to Retire (HR)",
       "description": "Human Resources Requests Support",
       "icon": "/static/assets/img/users.png",
@@ -327,6 +335,7 @@
     },
     {
       "id": 10,
+      "marker": 0,
       "name": "Order to Cash (Sales)",
       "description": "Sale Processes Support",
       "icon": "/static/assets/img/dollar-sign.png",
@@ -363,6 +372,7 @@
     },
     {
       "id": 11,
+      "marker": 0,
       "name": "New Opportunities",
       "description": "New Opportunities Support",
       "icon": "/static/assets/img/check-circle.png",
@@ -399,6 +409,7 @@
     },
     {
       "id": 12,
+      "marker": 0,
       "name": "Radiant System OTRS Services",
       "description": "OTRS Professional Services",
       "icon": "/static/assets/img/navigation.png",

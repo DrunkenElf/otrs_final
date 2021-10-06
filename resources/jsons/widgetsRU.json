@@ -2,6 +2,7 @@
   "widgets": [
     {
       "id": 1,
+      "marker": 0,
       "name": "Контроль Доступа",
       "description": "Поддержка контроля доступа",
       "icon": "/static/assets/img/fi_lock.png",
@@ -38,6 +39,7 @@
     },
     {
       "id": 2,
+      "marker": 0,
       "name": "Поодержка ПК",
       "description": "Поддержка ПК",
       "icon": "/static/assets/img/monitor.png",
@@ -74,6 +76,7 @@
     },
     {
       "id": 3,
+      "marker": 0,
       "name": "Бизнес",
       "description": "Поддержка Бизнес Системы",
       "icon": "/static/assets/img/briefcase.png",
@@ -110,6 +113,7 @@
     },
     {
       "id": 4,
+      "marker": 0,
       "name": "Телекоммуникации",
       "description": "Поддержка Телекоммуникации",
       "icon": "/static/assets/img/wifi.png",
@@ -146,6 +150,7 @@
     },
     {
       "id": 5,
+      "marker": 0,
       "name": "Телефон",
       "description": "Поддержка Мобильных Гаджетов",
       "icon": "/static/assets/img/smartphone.png",
@@ -182,6 +187,7 @@
     },
     {
       "id": 6,
+      "marker": 0,
       "name": "Инфраструктура",
       "description": "Поддержка инфраструктуры",
       "icon": "/static/assets/img/globe.png",
@@ -218,6 +224,7 @@
     },
     {
       "id": 7,
+      "marker": 0,
       "name": "Покупки",
       "description": "Поддержка Процесса Покупок",
       "icon": "/static/assets/img/shopping-cart.png",
@@ -254,6 +261,7 @@
     },
     {
       "id": 8,
+      "marker": 0,
       "name": "Администрация",
       "description": "Запрос для Администрации",
       "icon": "/static/assets/img/settings.png",
@@ -290,6 +298,7 @@
     },
     {
       "id": 9,
+      "marker": 0,
       "name": "HR",
       "description": "Поддержка HR",
       "icon": "/static/assets/img/users.png",
@@ -326,6 +335,7 @@
     },
     {
       "id": 10,
+      "marker": 0,
       "name": "Скидки",
       "description": "Поддержка Скидок",
       "icon": "/static/assets/img/dollar-sign.png",
@@ -362,6 +372,7 @@
     },
     {
       "id": 11,
+      "marker": 0,
       "name": "Возможности",
       "description": "Поддержка Возможностей",
       "icon": "/static/assets/img/check-circle.png",
@@ -398,6 +409,7 @@
     },
     {
       "id": 12,
+      "marker": 0,
       "name": "ОТРС",
       "description": "Сервисы ОТРС",
       "icon": "/static/assets/img/navigation.png",

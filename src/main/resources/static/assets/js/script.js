@@ -11,9 +11,12 @@ let widgets = new Vue({
         display: 0,
         widgetsEN: {},
         widgetsRU: {},
+        interface: [],
+        interfaceEN: ["IT Support", "Please Login", "New Ticket", "Opened Tickets", "Resolved Tickets", "All Tickets", "Report Issue", "Number of tickets:", "No", "Yes", "Fill the form to report the issue", "Files", "Report", "Your issue has been successfully sent!", "We will fix it as soon as possible."],
+        interfaceRU: ["IT Подержка", "Пожалуйста войдите", "Новый тикет", "Открытые тикеты", "Решенные тикеты", "Все тикеты", "Сообщить о проблеме", "Количество тикетов:", "Нет", "Да", "Заполните форму", "Файлы", "Сообщить", "Ваш запрос отправлен!", "Решим проблему как можно скорее."],
         widgets: this.widgetsEN,
         language: 0,
-        lng_image: document.location.origin+ "/static/assets/img/toggle-left.png",
+        lng_image: document.location.origin + "/static/assets/img/toggle-left.png",
         requestStatus: false,
         requestResp: "",
         user: {},
@@ -270,11 +273,13 @@ let widgets = new Vue({
             if (this.language === 0) {
                 this.widgets = this.widgetsRU.sort((a,b) => (a.order > b.order) ? 1 : ((b.order > a.order) ? -1 : 0));
                 this.language = 1;
-                this.lng_image = "/static/assets/img/toggle-right.png"
+                this.lng_image = "/static/assets/img/toggle-right.png";
+                this.interface = this.interfaceRU;
             }else {
                 this.widgets = this.widgetsEN.sort((a,b) => (a.order > b.order) ? 1 : ((b.order > a.order) ? -1 : 0));
                 this.language = 0;
-                this.lng_image = "/static/assets/img/toggle-left.png"
+                this.lng_image = "/static/assets/img/toggle-left.png";
+                this.interface = this.interfaceEN;
             }
         },
         logOut() {
@@ -312,6 +317,7 @@ let widgets = new Vue({
     },
     created: function () {
         console.log(window.history.state);
+        this.interface = this.interfaceEN;
         //console.log(window.location.history.state);
         //console.log(window.location.history.prototype);
         //window.location.
@@ -330,5 +336,22 @@ let widgets = new Vue({
             this.openTickets = this.getOpenTickets();
             this.closedTickets = this.getClosedTickets();
         });
+    },
+    mounted: function (){
+        window.setInterval(() => {
+            axios.get('/json').then((response) =>{
+                this.widgetsEN = response.data.widgets;
+                this.widgets = this.widgetsEN;
+            });
+            axios.get('/json_ru').then((response) =>{
+                this.widgetsRU = response.data.widgets;
+            });
+            axios.get('user').then((response) =>{
+                this.user = response.data;
+                this.tickets = this.getTicketArray();
+                this.openTickets = this.getOpenTickets();
+                this.closedTickets = this.getClosedTickets();
+            });
+        }, 60000);
     }
 })

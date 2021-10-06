@@ -21,17 +21,20 @@
 
             <header>
                 <div class="main-header middle-margin">
+
                     <div class="main-header_left">
                         <a href="/">
                             <img src="/static/assets/img/inno.png" height="45px" alt="logo">
                         </a>
-                        <h1 v-if="language === 0">IT Support</h1>
-                        <h1 v-else>IT Поддержка</h1>
+                        <!--<h1 v-if="language === 0">IT Support</h1>
+                        <h1 v-else>IT Поддержка</h1>-->
+                        <h1 v-text="interface[0]"></h1> <!- IT Support ->
                     </div>
                     <!--<div v-if="Object.keys(user).length === 0" class="main-header_right">-->
                     <div v-if="session.customerUser.length < 2" class="main-header_right">
-                        <h3 v-if="language === 0">Please Login</h3>
-                        <h3 v-else>Пожалуйста войдите</h3>
+                        <!--<h3 v-if="language === 0">Please Login</h3>
+                        <h3 v-else>Пожалуйста войдите</h3>-->
+                        <h3 v-text="interface[1]"></h3> <!- Please Login ->
                         <span>en</span>
                         <img @click="changeLanguage" :src="lng_image" id="language" alt="button" height="25">
                         <span>ru</span>
@@ -57,32 +60,40 @@
                 </div>
                 <hr class="green-hr">
                 <div class="main-header_links">
-                    <a v-if="language === 0" @click="setMainMenu(0)" id="link0" :class="{'green-color' :(main_menu === 0)}">New Ticket</a>
+                    <!--<a v-if="language === 0" @click="setMainMenu(0)" id="link0" :class="{'green-color' :(main_menu === 0)}">New Ticket</a>
                     <a v-else @click="setMainMenu(0)" id="link0" :class="{'green-color' :(main_menu === 0)}">Новый тикет</a>
                     <a v-if="language === 0" @click="setMainMenu(1)" id="link1" :class="{'green-color' :(main_menu === 1)}">Opened Tickets</a>
                     <a v-else @click="setMainMenu(1)" id="link1" :class="{'green-color' :(main_menu === 1)}">Открытые тикеты</a>
                     <a v-if="language === 0" @click="setMainMenu(2)" id="link2" :class="{'green-color' :(main_menu === 2)}">Resolved Tickets</a>
                     <a v-else @click="setMainMenu(2)" id="link2" :class="{'green-color' :(main_menu === 2)}">Решенные тикеты</a>
                     <a v-if="language === 0" @click="setMainMenu(3)" id="link3" class="last-element" :class="{'green-color' :(main_menu === 3)}">All Tickets</a>
-                    <a v-else @click="setMainMenu(3)" id="link3" class="last-element" :class="{'green-color' :(main_menu === 3)}">Все тикеты</a>
+                    <a v-else @click="setMainMenu(3)" id="link3" class="last-element" :class="{'green-color' :(main_menu === 3)}">Все тикеты</a>-->
+                    <a @click="setMainMenu(0)" id="link0" :class="{'green-color' :(main_menu === 0)}" v-text="interface[2]"></a> <!- New Ticket ->
+                    <a @click="setMainMenu(1)" id="link1" :class="{'green-color' :(main_menu === 1)}" v-text="interface[3]"></a> <!- Opened Tickets ->
+                    <a @click="setMainMenu(2)" id="link2" :class="{'green-color' :(main_menu === 2)}" v-text="interface[4]"></a> <!- Resolved Tickets ->
+                    <a @click="setMainMenu(3)" id="link3" class="last-element" :class="{'green-color' :(main_menu === 3)}" v-text="interface[5]"></a> <!- All Tickets ->
                 </div>
                 <hr class="green-hr">
             </header>
 
+            <!- Widgets ->
             <main v-if="main_menu === 0" id="main" class="grid-menu big-margin">
                 <div v-for="widget in widgets" class="grid-element border">
                     <h4 v-text='widget.id + ". " + widget.name'></h4>
                     <h6 v-text="widget.description" class="grid-description-text"></h6>
-                    <a  v-if="language === 0" v-on:click="setDisplay(widget.id)" class="grid-widget-link">Report Issue</a>
-                    <a  v-else v-on:click="setDisplay(widget.id)" class="grid-widget-link">Сообщить о проблеме</a>
+                    <!--<a  v-if="language === 0" v-on:click="setDisplay(widget.id)" class="grid-widget-link">Report Issue</a>
+                    <a  v-else v-on:click="setDisplay(widget.id)" class="grid-widget-link">Сообщить о проблеме</a>-->
+                    <a v-on:click="setDisplay(widget.id)" class="grid-widget-link" v-text="interface[6]"></a> <!- Report Issue ->
                 </div>
             </main>
 
+            <!- Opened Tickets ->
             <main v-if="main_menu === 1" class="big-margin">
 
                 <div class="ticket_number">
-                    <span v-if="language === 0">Number of tickets:</span>
-                    <span v-else>Количетсво тикетов:</span>
+                    <!--<span v-if="language === 0">Number of tickets:</span>
+                    <span v-else>Количетсво тикетов:</span>-->
+                    <span v-text="interface[7]"></span> <!- Number of tickets ->
                     <a @click="setTicketNumber(10)">10</a>
                     <a @click="setTicketNumber(20)">20</a>
                     <a @click="setTicketNumber(50)">50</a>
@@ -133,11 +144,13 @@
                 ></iframe>
             </main>
 
+            <!- Closed Tickets ->
             <main v-if="main_menu === 2" class="big-margin">
 
                 <div class="ticket_number">
-                    <span v-if="language === 0">Number of tickets:</span>
-                    <span v-else>Количество тикетов:</span>
+                    <!--<span v-if="language === 0">Number of tickets:</span>
+                    <span v-else>Количество тикетов:</span>-->
+                    <span v-text="interface[7]"></span> <!- Number of tickets ->
                     <a @click="setTicketNumber(10)">10</a>
                     <a @click="setTicketNumber(20)">20</a>
                     <a @click="setTicketNumber(50)">50</a>
@@ -190,11 +203,13 @@
                 ></iframe>
             </main>
 
+            <!- All Tickets ->
             <main v-if="main_menu === 3" class="big-margin">
 
                 <div class="ticket_number">
-                    <span v-if="language === 0">Number of tickets:</span>
-                    <span v-else>Количетсво тикетов:</span>
+                    <!--<span v-if="language === 0">Number of tickets:</span>
+                    <span v-else>Количетсво тикетов:</span>-->
+                    <span v-text="interface[7]"></span> <!- Number of tickets ->
                     <a @click="setTicketNumber(10)">10</a>
                     <a @click="setTicketNumber(20)">20</a>
                     <a @click="setTicketNumber(50)">50</a>
@@ -232,11 +247,11 @@
                 </div>
 
                 <div class="ticket_table_buttons">
-                    <button @click="setPage(1)" v-if="pageID > 2">1</button>
+                    <button @click="setPage(1)" v-if="pageID > 2" class="ticket_table_buttons__small">1</button>
                     <span v-if="pageID > 3">...</span>
-                    <button @click="setPage(pageID - 1)" v-if="pageID > 1" v-text="pageID - 1"></button>
-                    <button @click="setPage(pageID)" v-text="pageID"></button>
-                    <button @click="setPage(pageID + 1)" v-if="pageID + 1 <= pageNumbers" v-text="pageID + 1"></button>
+                    <button @click="setPage(pageID - 1)" v-if="pageID > 1" v-text="pageID - 1" class="ticket_table_buttons__small"></button>
+                    <button @click="setPage(pageID)" v-text="pageID" class="ticket_table_buttons__big"></button>
+                    <button @click="setPage(pageID + 1)" v-if="pageID + 1 <= pageNumbers" v-text="pageID + 1" class="ticket_table_buttons__small"></button>
                     <span v-if="pageID + 2 < pageNumbers">...</span>
                     <button @click="setPage(pageNumbers)" v-if="pageID + 1 < pageNumbers" v-text="pageNumbers"></button>
                 </div>
@@ -298,6 +313,7 @@
                                     <div class="faq_buttons middle-margin">
                                         <button v-if="language === 0" @click="setNextAnswer(widget.faq[question_id].answers[answer_id], 'No')" class="button">No</button>
                                         <button v-else @click="setNextAnswer(widget.faq[question_id].answers[answer_id], 'Нет')" class="button">Нет</button>
+                                        <!--<button @click="addFAQanswer(widget.faq[question_id].answers[answer_id] + ' No'); setFAQlist();" class="button" v-text="interface[8]"></button> <!- No ->-->
                                         <button v-if="language === 0" @click="setFAQlist(widget.faq[question_id].answers[answer_id], 'Yes')" class="button">Yes</button>
                                         <button v-else @click="setFAQlist(widget.faq[question_id].answers[answer_id], 'Да')" class="button">Да</button>
                                     </div>
@@ -306,8 +322,10 @@
                         </div>
 
                         <div class="request-body">
-                            <h2 v-if="language === 0" class="middle-margin">Fill the form to report the issue</h2>
-                            <h2 v-else class="middle-margin">Заполните форму</h2>
+                            <!--<h2 v-if="language === 0" class="middle-margin">Fill the form to report the issue</h2>
+                            <h2 v-else class="middle-margin">Заполните форму</h2>-->
+                            <h2 class="middle-margin" v-text="interface[10]"></h2> <!- Fill the form ->
+
                             <div class="request-field" v-for="field in widget.fields">
                                 <h3 v-text="field.title"></h3>
                                 <input v-model.trim="requestData.fieldsValue[widget.fields.indexOf(field)].value" v-if='field.type === "input"' v-bind:placeholder="field.placeholder" class="input border small-margin _req">
@@ -319,21 +337,25 @@
                                 <h4 v-for="i in requestData.faq" class="middle-margin" v-text="i"></h4>
                             </div>
 
-                            <h3 v-if="language === 0">Files</h3>
-                            <h3 v-else>Файлы</h3>
+                            <!--<h3 v-if="language === 0">Files</h3>
+                            <h3 v-else>Файлы</h3>-->
+                            <h3 v-text="interface[11]"></h3> <!- Files ->
                             <input type="file" @change="onFileSelected" class="small-margin" multiple>
-                            <button v-if="language === 0" v-on:click="setRequest()" class="button" id="report_button">Report</button>
-                            <button v-else v-on:click="setRequest()" class="button" id="report_button">Сообщить</button>
+                            <!--<button v-if="language === 0" v-on:click="setRequest()" class="button" id="report_button">Report</button>
+                            <button v-else v-on:click="setRequest()" class="button" id="report_button">Сообщить</button>-->
+                            <button v-on:click="setRequest()" class="button" id="report_button" v-text="interface[12]"></button> <!- Report ->
                         </div>
 
                     </div>
 
                     <div v-if="requestStatus" class="successful">
                         <img src="/static/assets/img/check-circle.png" alt="circle">
-                        <h3 v-if="language === 0">Your issue has been successfully sent!</h3>
+                        <!--<h3 v-if="language === 0">Your issue has been successfully sent!</h3>
                         <h3 v-else>Ваш запрос отправлен!</h3>
                         <h5 v-if="language === 0">We will fix it as soon as possible.</h5>
-                        <h5 v-else>Решим проблему как можно скорее.</h5>
+                        <h5 v-else>Решим проблему как можно скорее.</h5>-->
+                        <h3 v-text="interface[13]"></h3> <!- Your issue ... ->
+                        <h5 v-text="interface[14]"></h5> <!- We will ... ->
                     </div>
 
                 </main>
